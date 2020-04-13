@@ -10,7 +10,7 @@ int main()
 {
 //#######SETUP SYSTICK TIMER###########################
 	//__disable_irq();
-	__enable_irq();
+    __enable_irq();
 
 	//SysTick -> LOAD = SystemCoreClock/1000;	//1ms
 	SysTick->LOAD = SystemCoreClock / 1000000;	//1mcs
@@ -72,29 +72,28 @@ int main()
 	while (1)
 	{
 		//get 3 input signals
-		float Throttle	= pulseIN(5);
-		float Pitch		= pulseIN(6);
-		float Roll		= pulseIN(7);
-        float Yaw		= pulseIN(4);
-		float Switch	= pulseIN(3);
+		float Throttle  = pulseIN(5);
+		float Pitch     = pulseIN(6);
+		float Roll      = pulseIN(7);
+        float Yaw       = pulseIN(4);
+		float Switch    = pulseIN(3);
         
         if(Switch > 1500)
         {
-            ServoEnable = false;
+          ServoEnable = false;
         }
         else
         {
-            ServoEnable = true;
+          ServoEnable = true;
         }
         digitalWrite(PORT_A, 12, ServoEnable); //1-off 0-on
 
-		//set angle based on input
-//		SetServoAngle(0, (Throttle * 0.18 - 180));
-//		SetServoAngle(1, (Pitch * 0.18 - 180));
-//		SetServoAngle(2, (Roll * 0.18 - 180));
+        //set angle based on input
+//        SetServoAngle(0, (Throttle * 0.18 - 180));
+//        SetServoAngle(1, (Pitch * 0.18 - 180));
+//        SetServoAngle(2, (Roll * 0.18 - 180));
 //        
 //        SetServoAngle(5, (Yaw * 0.18 - 180));
-//        
         
         for(int i = 0; i<18; i+=3)
         {
@@ -103,7 +102,7 @@ int main()
             SetServoAngle(i+2, (Roll * 0.18 - 180));
         }
         //delay(500);
-        
+            
 //        for(int i = 9; i<18; i++)
 //        {
 //            SetServoAngle(i, 45);
