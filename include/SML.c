@@ -219,14 +219,29 @@ void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint1
 void SetServoAngle(uint8_t n, double angle)
 {
 	double deg_to_pulse = 100 + (SERVOMAX - SERVOMIN) * angle / 180;
+	double deg_to_pulse_left = 100 + (SERVOMAX - SERVOMIN) * (180-angle) / 180;
 
 	if (n < 9)
 	{
-		PCA9685_setPWM(PCA9685_ADDRESS_1, n, 0, deg_to_pulse);
+        if(n == 2 || n == 5 || n == 8)
+        {
+            PCA9685_setPWM(PCA9685_ADDRESS_1, n, 0, deg_to_pulse_left);
+        }
+        else
+        {
+            PCA9685_setPWM(PCA9685_ADDRESS_1, n, 0, deg_to_pulse);
+        }		
 	}
 	else
 	{
-		PCA9685_setPWM(PCA9685_ADDRESS_2, n-2, 0, deg_to_pulse);
+        if(n == 10 || n == 13 || n == 16)
+        {
+            PCA9685_setPWM(PCA9685_ADDRESS_2, n-2, 0, deg_to_pulse_left);
+        }
+        else
+        {
+            PCA9685_setPWM(PCA9685_ADDRESS_2, n-2, 0, deg_to_pulse);
+        }		
 	}	
 }
 //END OF PCA9685 STUFF-------------------------------------------------------------------------------------------------------
