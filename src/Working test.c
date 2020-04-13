@@ -53,14 +53,6 @@ int main()
     SetServoAngle(10, 90);
     SetServoAngle(11, 90);
 
-	//Home position
-//	FindAngles(0, 84, 44);
-//	SetServoAngle(0, q0grad);
-//	SetServoAngle(1, q1grad);
-//	SetServoAngle(2, q2grad);
-    //digitalWrite(PORT_A, 12, 0);
-	delay(500);
-
 	CoordX = 0;
 	CoordY = 84;
 	CoordZ = 44;
@@ -87,14 +79,6 @@ int main()
             ServoEnable = true;
         }
         digitalWrite(PORT_A, 12, ServoEnable); //1-off 0-on
-
-		//set angle based on input
-//		SetServoAngle(0, (Throttle * 0.18 - 180));
-//		SetServoAngle(1, (Pitch * 0.18 - 180));
-//		SetServoAngle(2, (Roll * 0.18 - 180));
-//        
-//        SetServoAngle(5, (Yaw * 0.18 - 180));
-//        
         
         for(int i = 0; i<18; i+=3)
         {
@@ -102,14 +86,6 @@ int main()
             SetServoAngle(i+1, (Pitch * 0.18 - 180));
             SetServoAngle(i+2, (Roll * 0.18 - 180));
         }
-        //delay(500);
-        
-//        for(int i = 9; i<18; i++)
-//        {
-//            SetServoAngle(i, 45);
-//        }
-//        delay(500);
-        
         
 	}
 }
