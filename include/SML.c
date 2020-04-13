@@ -34,6 +34,7 @@ void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config)
 
 void digitalWrite(uint8_t port, uint8_t pin, bool value)
 {
+	//Send 0 or 1 to pin
 
 	if (value == 1)
 	{
@@ -42,5 +43,16 @@ void digitalWrite(uint8_t port, uint8_t pin, bool value)
 	else if (value == 0)
 	{
 		((GPIO_TypeDef*)(GPIOA_BASE + (port - 2) * 0x0400))->ODR &= ~(1 << pin);
+	}
+}
+
+void delay(int millisec)
+{
+	//hard delay, empty cycle
+
+	unsigned long start_time = TimeFromStart;
+	while (TimeFromStart != (start_time + (millisec * 1000)))
+	{
+		//waiting
 	}
 }

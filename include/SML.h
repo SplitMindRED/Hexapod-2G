@@ -44,10 +44,10 @@
 #define SERVOMAX  						565 // this is the 'maximum' pulse length count (out of 4096)	//550
 //#define DEGREE_IN_PULSE				(SERVOMAX-SERVOMIN)/180
 
-#define LED0_ON_L		                0x06  /**< LED0 on tick, low byte*/
-#define LED0_ON_H		                0x07  /**< LED0 on tick, high byte*/
-#define LED0_OFF_L	                    0x08 /**< LED0 off tick, low byte */
-#define LED0_OFF_H	                    0x09 /**< LED0 off tick, high byte */
+#define LED0_ON_L		                0x06 //LED0 on tick, low byte
+#define LED0_ON_H		                0x07 //LED0 on tick, high byte
+#define LED0_OFF_L	                    0x08 //LED0 off tick, low byte
+#define LED0_OFF_H	                    0x09 //LED0 off tick, high byte
 
 #define PCA9685_ADDRESS_1               0x80
 #define PCA9685_ADDRESS_2               0x82
@@ -55,3 +55,7 @@
 void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config);
 
 void digitalWrite(uint8_t port, uint8_t pin, bool value);
+
+void delay(int millisec);
+
+uint64_t pulseIN(uint8_t PIN);
