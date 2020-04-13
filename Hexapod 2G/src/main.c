@@ -4,3 +4,9 @@
 #include "stm32f10x_i2c.h"              // Keil::Device:StdPeriph Drivers:I2C
 #include "stm32f10x_spi.h"              // Keil::Device:StdPeriph Drivers:SPI
 #include "stm32f10x_tim.h"              // Keil::Device:StdPeriph Drivers:TIM
+
+int main()
+{
+	
+	return 0;
+}
