@@ -52,10 +52,29 @@
 #define PCA9685_ADDRESS_1               0x80
 #define PCA9685_ADDRESS_2               0x82
 
+extern unsigned long TimeFromStart;
+extern uint16_t delay_count;
+extern double pi;
+extern double q0grad, q1grad, q2grad;
+extern double q0, q1, q2, Q, Qgrad, Q0, Q0grad;
+
 void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config);
-
 void digitalWrite(uint8_t port, uint8_t pin, bool value);
-
 void delay(int millisec);
-
 uint64_t pulseIN(uint8_t PIN);
+void SysTick_Handler(void);
+
+//I2C STUFF------------------------------------------------------------------------------------------
+void I2C1_init(void);
+void I2C_WriteByte(uint8_t device_address, uint8_t address, uint8_t data);
+void I2C_burst_write(uint8_t device_address, uint8_t address, uint8_t n_data, uint8_t* data);
+//END OF I2C STUFF-----------------------------------------------------------------------------------
+
+//PCA9685 STUFF--------------------------------------------------------------------------------------
+void PCA9685_reset(uint8_t device_address);
+void PCA9685_init(uint8_t device_address);
+void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint16_t off);
+void SetServoAngle(uint8_t n, double angle);
+//END OF PCA9685 STUFF-------------------------------------------------------------------------------
+
+void FindAngles(int x, int y, int z);

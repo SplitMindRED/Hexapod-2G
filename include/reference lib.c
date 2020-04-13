@@ -46,19 +46,19 @@
 #define PCA9685_ADDRESS  0x80
 
 
-bool led = true;
-unsigned long TimeFromStart = 0;
-uint16_t delay_count = 0;
-const int OA = 45;
-const int AB = 85;
-double pi = 3.14;
-//int x, y, z, p;
-double q0grad, q1grad, q2grad;
-double q0, q1, q2, Q, Qgrad, Q0, Q0grad;
-float Vx, Vy, Vz;
-float InputX, InputY, InputZ;
-float Last_InputX, Last_InputY, Last_InputZ;
-float CoordX, CoordY, CoordZ;
+//bool led = true;
+//unsigned long TimeFromStart = 0;
+//uint16_t delay_count = 0;
+//const int OA = 45;
+//const int AB = 85;
+//double pi = 3.14;
+////int x, y, z, p;
+//double q0grad, q1grad, q2grad;
+//double q0, q1, q2, Q, Qgrad, Q0, Q0grad;
+//float Vx, Vy, Vz;
+//float InputX, InputY, InputZ;
+//float Last_InputX, Last_InputY, Last_InputZ;
+//float CoordX, CoordY, CoordZ;
 
 
 //MY LIB--------------------------------------------------------------
