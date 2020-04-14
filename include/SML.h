@@ -1,6 +1,6 @@
 /***********************************************
 *SplitMind Library
-*Version 0.1
+*Version 0.2
 ************************************************/
 #include "stm32f10x.h"                  // Device header
 #include "stm32f10x_rcc.h"              // Keil::Device:StdPeriph Drivers:RCC
@@ -75,6 +75,7 @@ void PCA9685_reset(uint8_t device_address);
 void PCA9685_init(uint8_t device_address);
 void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint16_t off);
 void SetServoAngle(uint8_t n, double angle);
+void SpeedControl_SetServoAngle(uint8_t n, double angle, uint8_t pause);
 //END OF PCA9685 STUFF-------------------------------------------------------------------------------
 
 void FindAngles(int x, int y, int z);

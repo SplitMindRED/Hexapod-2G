@@ -1,7 +1,20 @@
 /***********************************************
 *SplitMind Library
-*Version 0.1
+*Version 0.2
+*
+*WRITING BITs
+*a |= 1 << 7;					//set 1 in 7th bit
+*a &= ~(1 << 3);				//set 0 in 3th bit
+*a ^= 1 << 5;					//inversion of 5th bit
+*a |= 1 << 7 | 1 << 8		//sets 1 to 7th and 8th bits
+*
+*READING BITs
+*if( a & (1<<7) )				//if 7th bit in "a" var equals 1 -> true
+*a & ( 1 << 7 | 1 << 8 )	//checks 7th and 8th bits
+*
 ************************************************/
+
+
 
 #include "SML.h"
 
@@ -125,7 +138,7 @@ void I2C1_init(void)
 	I2C_InitStructure.I2C_OwnAddress1 = 0x00;
 	I2C_InitStructure.I2C_Ack = I2C_Ack_Disable;
 	I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
-	I2C_InitStructure.I2C_ClockSpeed = 100000;
+	I2C_InitStructure.I2C_ClockSpeed = 400000;
 
 	/* I2C Peripheral Enable */
 	I2C_Cmd(I2C1, ENABLE);
@@ -243,6 +256,11 @@ void SetServoAngle(uint8_t n, double angle)
             PCA9685_setPWM(PCA9685_ADDRESS_2, n-2, 0, deg_to_pulse);
         }		
 	}	
+}
+
+void SpeedControl_SetServoAngle(uint8_t n, double angle, uint8_t pause)
+{
+
 }
 //END OF PCA9685 STUFF-------------------------------------------------------------------------------------------------------
 

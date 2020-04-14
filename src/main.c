@@ -7,11 +7,6 @@ float CoordX, CoordY, CoordZ;
 float Throttle, Pitch, Roll, Yaw, Switch;
 bool ServoEnable = false;
 
-#define NumberOfServo 18
-#define NumberOfLeg   6
-int Movement = 0;
-bool StandPosition = false;
-
 void Setup()
 {
 //#######SETUP SYSTICK TIMER###########################
@@ -53,22 +48,23 @@ void Setup()
 
 void GetSignals()
 {
-    //get 3 input signals
-    Throttle = pulseIN(5);
-    Pitch = pulseIN(6);
-    Roll = pulseIN(7);
-    Yaw = pulseIN(4);
-    Switch = pulseIN(3);
+   //get 3 input signals
+   Throttle = pulseIN(5);
+   Pitch = pulseIN(6);
+   Roll = pulseIN(7);
+   Yaw = pulseIN(4);
+   Switch = pulseIN(3);
 
-    if (Switch > 1500)
-    {
-        ServoEnable = false;
-    }
-    else
-    {
-        ServoEnable = true;
-    }
-    digitalWrite(PORT_A, 12, ServoEnable); //1-off 0-on
+   if (Switch > 1500)
+   {
+      ServoEnable = false;
+   }
+   else
+   {
+      ServoEnable = true;
+   }
+   
+   digitalWrite(PORT_A, 12, ServoEnable); //1-off 0-on
 }
 
 void ServoTest4()
@@ -86,28 +82,37 @@ void ServoTest4()
 
 void FullServoTest()
 {
-    for (int i = 0; i < 18; i += 3)
-    {
-        SetServoAngle(i, (Throttle * 0.18 - 180));
-        SetServoAngle(i + 1, (Pitch * 0.18 - 180));
-        SetServoAngle(i + 2, (Roll * 0.18 - 180));
-    }
+   for (int i = 0; i < 18; i += 3)
+   {
+      SetServoAngle(i, (Throttle * 0.18 - 180));
+      SetServoAngle(i + 1, (Pitch * 0.18 - 180));
+      SetServoAngle(i + 2, (Roll * 0.18 - 180));
+   }
 }
-
 
 int main()
 {
     Setup();
 
     //main loop
-    int i = 0;
     while (1)
-    {	
-        GetSignals();
+    {	       
+      GetSignals();
+       
+      TIM1 -> CCMR1 |= 1;
+      TIM1 -> CCER &= ~(1 << 1);
+      TIM1 -> CCMR1 |= 1 << 9;
+      TIM1 -> CCER |= 1 << 5;
+      TIM1 -> SMCR |= 101 << 4;
+      TIM1 -> SMCR |= 100;
+      TIM1 -> CCER |= 1;
+      TIM1 -> CCER |= 1 << 4;
+      
+       
+      //ServoTest4();
 
-        //ServoTest4();
-
-        //FullServoTest();
+      FullServoTest();
+      
 
     }
 }
