@@ -9,22 +9,28 @@ bool ServoEnable = false;
 
 void Setup()
 {
-//#######SETUP SYSTICK TIMER###########################
-    //__disable_irq();
-    __enable_irq();
+//SETUP SYSTICK TIMER------------------------------------
 
-    //SysTick -> LOAD = SystemCoreClock/1000;	//1ms
-    SysTick->LOAD = SystemCoreClock / 1000000;	//1mcs
+   //__enable_irq();
 
-    SysTick->CTRL = 0b111;						//start count
-//#######################################################
+   //SysTick -> LOAD = SystemCoreClock/1000;	//1ms
+   //SysTick->LOAD = SystemCoreClock / 1000000;	//1mcs
+
+   //SysTick->CTRL = 0b111;						      //start count
+   SysTick_Config(SystemCoreClock / 1000000);
+//------------------------------------------------------
+    
+    for (uint8_t i = 0; i < 6; i++)
+    {
+       Channel[i] = 0;
+    }
 
     //5 channels input
-    pinMode(PORT_A, 7, INPUT, INPUT_PULL_UP_DOWN);
-    pinMode(PORT_A, 6, INPUT, INPUT_PULL_UP_DOWN);
-    pinMode(PORT_A, 5, INPUT, INPUT_PULL_UP_DOWN);
-    pinMode(PORT_A, 4, INPUT, INPUT_PULL_UP_DOWN);
-    pinMode(PORT_A, 3, INPUT, INPUT_PULL_UP_DOWN);
+    //pinMode(PORT_A, 7, INPUT, INPUT_PULL_UP_DOWN);
+    //pinMode(PORT_A, 6, INPUT, INPUT_PULL_UP_DOWN);
+    //pinMode(PORT_A, 5, INPUT, INPUT_PULL_UP_DOWN);
+    //pinMode(PORT_A, 4, INPUT, INPUT_PULL_UP_DOWN);
+    //pinMode(PORT_A, 3, INPUT, INPUT_PULL_UP_DOWN);
 
     //Servo Enable (OE - output enable)
     pinMode(PORT_A, 12, OUTPUT_2, OUTPUT_GPO_PUSH_PULL);
@@ -41,9 +47,12 @@ void Setup()
     I2C1_init();
     PCA9685_init(PCA9685_ADDRESS_1);
     PCA9685_init(PCA9685_ADDRESS_2);
-
-    //led on
-    digitalWrite(PORT_C, 13, 0);
+    
+    EXTI0_init();
+    
+   __enable_irq();
+   //led on
+   digitalWrite(PORT_C, 13, 0);
 }
 
 void GetSignals()
@@ -84,35 +93,39 @@ void FullServoTest()
 {
    for (int i = 0; i < 18; i += 3)
    {
-      SetServoAngle(i, (Throttle * 0.18 - 180));
-      SetServoAngle(i + 1, (Pitch * 0.18 - 180));
-      SetServoAngle(i + 2, (Roll * 0.18 - 180));
+      //SetServoAngle(i, (Throttle * 0.18 - 180));
+      //SetServoAngle(i + 1, (Pitch * 0.18 - 180));
+      //SetServoAngle(i + 2, (Roll * 0.18 - 180));
+      
+      SetServoAngle(i, (Channel[0] * 0.18 - 108));
+      SetServoAngle(i + 1, (Channel[1] * 0.18 - 108));
+      SetServoAngle(i + 2, (Channel[2] * 0.18 - 108));
    }
 }
 
 int main()
 {
-    Setup();
+   Setup();
 
-    //main loop
-    while (1)
-    {	       
-      GetSignals();
-       
-      TIM1 -> CCMR1 |= 1;
-      TIM1 -> CCER &= ~(1 << 1);
-      TIM1 -> CCMR1 |= 1 << 9;
-      TIM1 -> CCER |= 1 << 5;
-      TIM1 -> SMCR |= 101 << 4;
-      TIM1 -> SMCR |= 100;
-      TIM1 -> CCER |= 1;
-      TIM1 -> CCER |= 1 << 4;
-      
+   //main loop
+   while (1)
+   {	       
+      //GetSignals();
        
       //ServoTest4();
-
-      FullServoTest();
+      if (Channel[4] > 1100)
+      {
+         ServoEnable = 0;
+      }
+      else
+      {
+         ServoEnable = 1;
+      }
+   
+      digitalWrite(PORT_A, 12, ServoEnable); //1-off 0-on     
+      digitalWrite(PORT_C, 13, ServoEnable); //1-led off, 0-led on
       
+      FullServoTest();
 
-    }
+   }
 }

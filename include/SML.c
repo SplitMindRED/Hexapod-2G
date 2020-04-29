@@ -1,6 +1,6 @@
 /***********************************************
 *SplitMind Library
-*Version 0.2
+*Version 0.3
 *
 *WRITING BITs
 *a |= 1 << 7;					//set 1 in 7th bit
@@ -14,11 +14,15 @@
 *
 ************************************************/
 
-
-
 #include "SML.h"
 
 unsigned long TimeFromStart = 0;
+unsigned long Millis = 0;
+unsigned long CurrentInterruptionTime = 0;
+uint16_t deltaInterruptionTime = 0;
+uint8_t ChannelCounter = 0;
+bool StartPackage = false;
+float Channel[6];
 uint16_t delay_count = 0;
 const int OA = 45;
 const int AB = 85;
@@ -107,14 +111,6 @@ uint64_t pulseIN(uint8_t PIN)
 	return PulseLength;
 }
 
-//function for SysTick timer interruption
-void SysTick_Handler(void)
-{
-	//increments every 1 microsec
-
-	TimeFromStart++;
-}
-
 //I2C STUFF-----------------------------------------------------------------------------
 GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -148,6 +144,7 @@ void I2C1_init(void)
 
 void I2C_WriteByte(uint8_t device_address, uint8_t address, uint8_t data)
 {
+   uint32_t stop = 0;
 	//send START
 	I2C_GenerateSTART(I2C1, ENABLE);
 	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));
@@ -166,8 +163,14 @@ void I2C_WriteByte(uint8_t device_address, uint8_t address, uint8_t data)
 
 	//send STOP
 	I2C_GenerateSTOP(I2C1, ENABLE);
-
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
+   {
+      stop++;
+      if(stop == 1000)
+      {
+         break;
+      }
+   }
 }
 
 void I2C_burst_write(uint8_t device_address, uint8_t address, uint8_t n_data, uint8_t* data)
@@ -231,6 +234,10 @@ void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint1
 
 void SetServoAngle(uint8_t n, double angle)
 {
+   if(angle < 0)
+   {
+      angle = 0;
+   }
 	double deg_to_pulse = 100 + (SERVOMAX - SERVOMIN) * angle / 180;
 	double deg_to_pulse_left = 100 + (SERVOMAX - SERVOMIN) * (180-angle) / 180;
 
@@ -263,6 +270,110 @@ void SpeedControl_SetServoAngle(uint8_t n, double angle, uint8_t pause)
 
 }
 //END OF PCA9685 STUFF-------------------------------------------------------------------------------------------------------
+
+//TIMERS STUFF--------------------------------------------------------------------------------------
+/*
+void TIMER3_Init_Millisec()
+{
+	//example code for timer millisec counter
+
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+
+	TIM_TimeBaseInitTypeDef timer_base;                    //create struct instance
+	TIM_TimeBaseStructInit(&timer_base);                   //fill with default values
+	timer_base.TIM_Prescaler = 72 - 1;                     //fill your value (prescale from 0 to 65535, 1 000 000 Hz)
+	timer_base.TIM_Period = 1000 - 1;							 //
+	TIM_TimeBaseInit(TIM3, &timer_base);                   //initialize timer
+
+	__disable_irq();													 //disable all interruptions
+	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);             //tune timers interruptions parametres
+	NVIC_EnableIRQ(TIM3_IRQn);                             //enable interruptions of specific timer
+	__enable_irq();													 //enable all interruptions
+	TIM_Cmd(TIM3, ENABLE);                                 //start count
+}
+
+void TIM3_IRQHandler(void)
+{
+	TIM_ClearFlag(TIM3, TIM_IT_Update);							 //reset interruption flag
+	Millis++;															 //increment every 1 millisec
+}
+*/
+
+//function for SysTick timer interruption
+void SysTick_Handler(void)
+{
+	//increments every 1 microsec
+
+	TimeFromStart++;
+}
+//END OF TIMERS STUFF-------------------------------------------------------------------------------
+
+//EXTERNAL INTERRUPTIONS STUFF----------------------------------------------------------------------
+
+void EXTI0_IRQHandler(void)
+{
+	//reset interruption flag
+	EXTI->PR = EXTI_PR_PR0;
+
+	//if FRONT
+	if (GPIOA->IDR & 1)
+	{
+		//get time
+		CurrentInterruptionTime = TimeFromStart;
+	}
+	else
+	{
+		//if END -> evaluate delta
+		deltaInterruptionTime = TimeFromStart - CurrentInterruptionTime;
+
+		//if we have found start of package after 9100 mcs
+		if (StartPackage == true)
+		{
+			//consistently store channel values to array 
+			Channel[ChannelCounter] = deltaInterruptionTime;
+			ChannelCounter++;
+			if (ChannelCounter == 6)
+			{
+				//when package is fully gathered
+				StartPackage = false;
+			}
+		}
+		else if (deltaInterruptionTime > 5000)
+		{
+			//if long HIGH level detected -> we found start of the package
+			StartPackage = true;
+			ChannelCounter = 0;
+		}
+	}
+}
+
+void EXTI0_init(void)
+{
+	//clock for PA0 pin and alternate function
+	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
+	RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
+
+	//GPIO PA0 pin initialization
+	GPIO_InitTypeDef gpio_cfg;
+	GPIO_StructInit(&gpio_cfg);
+
+	gpio_cfg.GPIO_Mode = GPIO_Mode_IPU;
+	gpio_cfg.GPIO_Pin = GPIO_Pin_0;
+	GPIO_Init(GPIOA, &gpio_cfg);
+
+	//connecting alternate funcion of PA0 pin to external interruptions
+	AFIO->EXTICR[0] &= ~(AFIO_EXTICR1_EXTI0_PA);
+
+	//some preparations...
+	EXTI->RTSR |= EXTI_RTSR_TR0;
+	EXTI->FTSR |= EXTI_RTSR_TR0;
+	EXTI->PR = EXTI_RTSR_TR0;
+	EXTI->IMR |= EXTI_RTSR_TR0;
+
+	//enable external interruptions of pin 0
+	NVIC_EnableIRQ(EXTI0_IRQn);
+}
+//END OF EXTERNAL INTERRUPTIONS STUFF---------------------------------------------------------------
 
 void FindAngles(int x, int y, int z)
 {
