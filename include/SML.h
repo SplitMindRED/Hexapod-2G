@@ -59,10 +59,11 @@ extern uint16_t deltaInterruptionTime;
 extern uint8_t ChannelCounter;
 extern bool StartPackage;
 extern float Channel[6];
+extern bool ServoEnable;
 extern uint16_t delay_count;
 extern double pi;
-extern double q0grad, q1grad, q2grad;
-extern double q0, q1, q2, Q, Qgrad, Q0, Q0grad;
+extern double q0rad, q1rad, q2rad;
+extern double q0, q1, q2, Q, Qrad, Q0, Q0rad;
 
 void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config);
 void digitalWrite(uint8_t port, uint8_t pin, bool value);

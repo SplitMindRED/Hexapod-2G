@@ -24,12 +24,14 @@ uint8_t ChannelCounter = 0;
 bool StartPackage = false;
 float Channel[6];
 uint16_t delay_count = 0;
-const int OA = 45;
-const int AB = 85;
-double pi = 3.14;
-double q0grad, q1grad, q2grad;
-double q0, q1, q2, Q, Qgrad, Q0, Q0grad;
+bool ServoEnable = false;
 
+const uint8_t OA = 37;
+const uint8_t AB = 45;
+const uint8_t BC = 85;
+double pi = 3.14;
+double q0rad, q1rad, q2rad;
+double q0, q1, q2, Q, Qrad, Q0, Q0rad;
 //set mode of pin of port. look to define for parameters
 void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config)
 {
@@ -337,6 +339,21 @@ void EXTI0_IRQHandler(void)
 				//when package is fully gathered
 				StartPackage = false;
 			}
+			else if (ChannelCounter == 5)
+			{
+				//for emergency stop check 4 channel with new value
+				if (Channel[4] > 1100)
+				{
+					ServoEnable = 0;
+					
+				}
+				else
+				{
+					ServoEnable = 1;
+				}
+				digitalWrite(PORT_A, 12, ServoEnable); //1-off 0-on     
+				digitalWrite(PORT_C, 13, ServoEnable); //1-led off, 0-led on				
+			}
 		}
 		else if (deltaInterruptionTime > 5000)
 		{
@@ -377,36 +394,28 @@ void EXTI0_init(void)
 
 void FindAngles(int x, int y, int z)
 {
-	//long int TimeStart = micros();
-	double p = sqrt(x * x + y * y);
-	double L_OB = sqrt(p * p + z * z);
+	double p = sqrt( x*x + y*y );
+	double OC = sqrt( p*p + z*z );
+	double AC = sqrt( (p-OA)*(p-OA) + z*z );
 
-	if (x == 0)		q0 = acos(x / p);
-	else			q0 = atan2(y, x);
+	Qrad = atan(z / (p-OA));
+	Q0rad = acos((AB * AB + AC * AC - BC * BC) / (2 * AB * AC));
 
-	q0grad = q0 * 180 / pi;
+	if (x == 0)
+	{
+		q0rad = 0;
+	}		
+	else
+	{
+		q0rad = atan2(y, x);
+	}
 
-	//Q = atan2(z, p);
-	Q = atan(z / p);
-	//Qgrad = Q * 180 / pi;
-	//Serial.print("Q = ");	Serial.println(Q);
+	q0 = q0rad * 180 / pi + 45;
 
-	Q0 = acos((pow(OA, 2) + pow(L_OB, 2) - pow(AB, 2)) / (2 * OA * L_OB));
-	//Q0grad = Q0 * 180 / pi;
-	//Serial.print("Q0 = ");	Serial.println(Q0);
+	q1rad = Qrad + Q0rad;
+	q1 = q1rad * 180 / pi + 90;
 
-	q1 = Q + Q0;
-	q1grad = 180 - q1 * 180 / pi;
-
-	q2 = acos((pow(OA, 2) + pow(AB, 2) - pow(L_OB, 2)) / (2 * OA * AB));
-	q2grad = q2 * 180 / pi;
-
-	//long int TimeFinish = micros();
-	//Serial.print("TimeStart = ");	Serial.println(TimeStart);
-	//Serial.print("TimeFinish = ");	Serial.println(TimeFinish);
-	//Serial.println();
-	/*delay(1000);
-	int Time = millis();
-	Serial.print("Time = ");	Serial.println(Time);*/
+	q2rad = acos( (AB*AB + BC*BC - AC*AC) / (2 * AB * BC) );
+	q2 = q2rad * 180 / pi;
 }
 
