@@ -181,161 +181,35 @@ int main()
       int delaypause = 1500;
 
       
-//      for (int16_t Y = -25; Y < 25; Y++)
-//      {
-//         MoveLeg(0, 50, Y, -50);
-//         MoveLeg(1, 50, Y, -50);
-//         MoveLeg(2, 50, Y, -50);
+      for (int16_t Y = -25; Y < 25; Y++)
+      {
+         MoveLeg(0, 50, Y, -50);
+         MoveLeg(1, 50, Y, -50);
+         MoveLeg(2, 50, Y, -50);
 
-//         MoveLeg(3, -50, Y, -50);
-//         MoveLeg(4, -50, Y, -50);
-//         MoveLeg(5, -50, Y, -50);
-//         
-//         delay(pause);
-//      }
+         MoveLeg(3, -50, Y, -50);
+         MoveLeg(4, -50, Y, -50);
+         MoveLeg(5, -50, Y, -50);
+         
+         delay(pause);
+      }
 
-//      delay(delaypause);
+      delay(delaypause);
 
-//      for (int16_t Y = 25; Y > -25; Y--)
-//      {
-//         MoveLeg(0, 50, Y, -50);
-//         MoveLeg(1, 50, Y, -50);
-//         MoveLeg(2, 50, Y, -50);
-//         
-//         MoveLeg(3, -50, Y, -50);
-//         MoveLeg(4, -50, Y, -50);
-//         MoveLeg(5, -50, Y, -50);
-//         delay(pause);
-//      }
+      for (int16_t Y = 25; Y > -25; Y--)
+      {
+         MoveLeg(0, 50, Y, -50);
+         MoveLeg(1, 50, Y, -50);
+         MoveLeg(2, 50, Y, -50);
+         
+         MoveLeg(3, -50, Y, -50);
+         MoveLeg(4, -50, Y, -50);
+         MoveLeg(5, -50, Y, -50);
+         delay(pause);
+      }
 
-//      delay(delaypause);
+      delay(delaypause);
 
-//line for mid right leg
-//      for (uint16_t Y = 0; Y < 50; Y++)
-//      {
-//         FindAngles(1, 50, Y, -50);
-
-//         SetServoAngle(3, q0);
-//         SetServoAngle(4, q1);
-//         SetServoAngle(5, q2);
-//         delay(pause);
-//      }
-//      
-//      delay(delaypause);
-
-//      for (uint16_t Y = 50; Y > 0; Y--)
-//      {
-//         FindAngles(1, 50, Y, -50);
-
-//         SetServoAngle(3, q0);
-//         SetServoAngle(4, q1);
-//         SetServoAngle(5, q2);
-//         delay(pause);
-//      }
-
-//      delay(delaypause);
-
-
-
-//line for back right leg
-//      for (int16_t Y = 0; Y > -50; Y--)
-//      {
-//         FindAngles(0, 50, Y, -50);
-
-//         SetServoAngle(0, q0);
-//         SetServoAngle(1, q1);
-//         SetServoAngle(2, q2);
-//         delay(pause);
-//      }
-//      
-//      delay(delaypause);
-
-//      for (int16_t Y = -50; Y < 0; Y++)
-//      {
-//         FindAngles(0, 50, Y, -50);
-
-//         SetServoAngle(0, q0);
-//         SetServoAngle(1, q1);
-//         SetServoAngle(2, q2);
-//         delay(pause);
-//      }
-
-//      delay(delaypause);
-
-//line for front left leg
-//      for (int16_t Y = 0; Y < 50; Y++)
-//      {
-//         FindAngles(-50, Y, -50);
-
-//         SetServoAngle(9, q0);
-//         SetServoAngle(10, q1);
-//         SetServoAngle(11, q2);
-//         delay(pause);
-//      }
-
-//      delay(delaypause);
-
-//      for (int16_t Y = 50; Y > 0; Y--)
-//      {
-//         FindAngles(-50, Y, -50);
-
-//         SetServoAngle(9, q0);
-//         SetServoAngle(10, q1);
-//         SetServoAngle(11, q2);
-//         delay(pause);
-//      }
-
-//      delay(delaypause);
-
-//line for mid left leg
-//      for (int16_t Y = 0; Y < 50; Y++)
-//      {
-//         FindAngles(-50, Y, -50);
-
-//         SetServoAngle(12, q0);
-//         SetServoAngle(13, q1);
-//         SetServoAngle(14, q2);
-//         delay(pause);
-//      }
-
-//      delay(delaypause);
-
-//      for (int16_t Y = 50; Y > 0; Y--)
-//      {
-//         FindAngles(-50, Y, -50);
-
-//         SetServoAngle(12, q0);
-//         SetServoAngle(13, q1);
-//         SetServoAngle(14, q2);
-//         delay(pause);
-//      }
-
-//      delay(delaypause);
-      
-//line for back left leg
-//      for (int16_t Y = 0; Y > -50; Y--)
-//      {
-//         FindAngles(-50, Y, -50);
-
-//         SetServoAngle(15, q0);
-//         SetServoAngle(16, q1);
-//         SetServoAngle(17, q2);
-//         delay(pause);
-//      }
-
-//      delay(delaypause);
-
-//      for (int16_t Y = -50; Y < 0; Y++)
-//      {
-//         FindAngles(-50, Y, -50);
-
-//         SetServoAngle(15, q0);
-//         SetServoAngle(16, q1);
-//         SetServoAngle(17, q2);
-//         delay(pause);
-//      }
-
-//      delay(delaypause);
 
    }
 }
