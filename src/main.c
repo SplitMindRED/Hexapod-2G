@@ -39,17 +39,19 @@ void Setup()
     I2C1_init();
     PCA9685_init(PCA9685_ADDRESS_1);
     PCA9685_init(PCA9685_ADDRESS_2);
+    delay(100);
     
     EXTI0_init();
-
-    for (uint8_t ServoNum = 0; ServoNum < 18; ServoNum++)
-    {
-       SetServoAngle(ServoNum, 90);
-    }
     
    __enable_irq();
 
    delay(100);
+   
+//   for (uint8_t ServoNum = 0; ServoNum < 18; ServoNum++)
+//    {
+//       SetServoAngle(ServoNum, 90);
+//    }
+    
    
    //led on
    digitalWrite(PORT_C, 13, 0);
@@ -176,59 +178,89 @@ int main()
       //FullServoTest(1);      
 
       int pause = 20;
-      int delaypause = 2500;
+      int delaypause = 1500;
+
+      
+//      for (int16_t Y = -25; Y < 25; Y++)
+//      {
+//         MoveLeg(0, 50, Y, -50);
+//         MoveLeg(1, 50, Y, -50);
+//         MoveLeg(2, 50, Y, -50);
+
+//         MoveLeg(3, -50, Y, -50);
+//         MoveLeg(4, -50, Y, -50);
+//         MoveLeg(5, -50, Y, -50);
+//         
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+
+//      for (int16_t Y = 25; Y > -25; Y--)
+//      {
+//         MoveLeg(0, 50, Y, -50);
+//         MoveLeg(1, 50, Y, -50);
+//         MoveLeg(2, 50, Y, -50);
+//         
+//         MoveLeg(3, -50, Y, -50);
+//         MoveLeg(4, -50, Y, -50);
+//         MoveLeg(5, -50, Y, -50);
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
 
 //line for mid right leg
-      for (uint16_t Y = 0; Y < 50; Y++)
-      {
-         FindAngles(1, 50, Y, -50);
+//      for (uint16_t Y = 0; Y < 50; Y++)
+//      {
+//         FindAngles(1, 50, Y, -50);
 
-         SetServoAngle(3, q0);
-         SetServoAngle(4, q1);
-         SetServoAngle(5, q2);
-         delay(pause);
-      }
-      
-      delay(delaypause);
+//         SetServoAngle(3, q0);
+//         SetServoAngle(4, q1);
+//         SetServoAngle(5, q2);
+//         delay(pause);
+//      }
+//      
+//      delay(delaypause);
 
-      for (uint16_t Y = 50; Y > 0; Y--)
-      {
-         FindAngles(1, 50, Y, -50);
+//      for (uint16_t Y = 50; Y > 0; Y--)
+//      {
+//         FindAngles(1, 50, Y, -50);
 
-         SetServoAngle(3, q0);
-         SetServoAngle(4, q1);
-         SetServoAngle(5, q2);
-         delay(pause);
-      }
+//         SetServoAngle(3, q0);
+//         SetServoAngle(4, q1);
+//         SetServoAngle(5, q2);
+//         delay(pause);
+//      }
 
-      delay(delaypause);
+//      delay(delaypause);
 
 
 
 //line for back right leg
-      for (int16_t Y = 0; Y > -50; Y--)
-      {
-         FindAngles(0, 50, Y, -50);
+//      for (int16_t Y = 0; Y > -50; Y--)
+//      {
+//         FindAngles(0, 50, Y, -50);
 
-         SetServoAngle(0, q0);
-         SetServoAngle(1, q1);
-         SetServoAngle(2, q2);
-         delay(pause);
-      }
-      
-      delay(delaypause);
+//         SetServoAngle(0, q0);
+//         SetServoAngle(1, q1);
+//         SetServoAngle(2, q2);
+//         delay(pause);
+//      }
+//      
+//      delay(delaypause);
 
-      for (int16_t Y = -50; Y < 0; Y++)
-      {
-         FindAngles(0, 50, Y, -50);
+//      for (int16_t Y = -50; Y < 0; Y++)
+//      {
+//         FindAngles(0, 50, Y, -50);
 
-         SetServoAngle(0, q0);
-         SetServoAngle(1, q1);
-         SetServoAngle(2, q2);
-         delay(pause);
-      }
+//         SetServoAngle(0, q0);
+//         SetServoAngle(1, q1);
+//         SetServoAngle(2, q2);
+//         delay(pause);
+//      }
 
-      delay(delaypause);
+//      delay(delaypause);
 
 //line for front left leg
 //      for (int16_t Y = 0; Y < 50; Y++)

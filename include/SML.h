@@ -70,32 +70,37 @@ void digitalWrite(uint8_t port, uint8_t pin, bool value);
 void delay(int millisec);
 uint64_t pulseIN(uint8_t PIN);
 
-//I2C STUFF------------------------------------------------------------------------------------------
+//I2C------------------------------------------------------------------------------------------
 void I2C1_init(void);
 void I2C_WriteByte(uint8_t device_address, uint8_t address, uint8_t data);
 void I2C_burst_write(uint8_t device_address, uint8_t address, uint8_t n_data, uint8_t* data);
-//END OF I2C STUFF-----------------------------------------------------------------------------------
+//END OF I2C-----------------------------------------------------------------------------------
 
-//PCA9685 STUFF--------------------------------------------------------------------------------------
+//PCA9685--------------------------------------------------------------------------------------
 void PCA9685_reset(uint8_t device_address);
 void PCA9685_init(uint8_t device_address);
 void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint16_t off);
 void SetServoAngle(uint8_t n, double angle);
 void SpeedControl_SetServoAngle(uint8_t n, double angle, uint8_t pause);
-//END OF PCA9685 STUFF-------------------------------------------------------------------------------
+//END OF PCA9685-------------------------------------------------------------------------------
 
-//TIMERS STUFF--------------------------------------------------------------------------------------
+//TIMERS---------------------------------------------------------------------------------------
 //void TIMER3_Init_Millisec();
 /* for ppm pin A7 takes TIM3_CH2*/
 //function for SysTick timer interruption
 void SysTick_Handler(void);
-//END OF TIMERS STUFF-------------------------------------------------------------------------------
+//END OF TIMERS-------------------------------------------------------------------------------
 
-//EXTERNAL INTERRUPTIONS STUFF----------------------------------------------------------------------
+//EXTERNAL INTERRUPTIONS----------------------------------------------------------------------
 
 void EXTI0_IRQHandler(void);
 
 void EXTI0_init(void);
-//END OF EXTERNAL INTERRUPTIONS STUFF---------------------------------------------------------------
+//END OF EXTERNAL INTERRUPTIONS---------------------------------------------------------------
 
+
+//HEXAPOD MOVEMENTS---------------------------------------------------------------------------
 void FindAngles(uint8_t LegNum, double x, double y, double z);
+
+void MoveLeg(uint8_t LegNum, double x, double y, double z);
+//END OF HEXAPOD MOVEMENTS--------------------------------------------------------------------

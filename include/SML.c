@@ -113,7 +113,7 @@ uint64_t pulseIN(uint8_t PIN)
 	return PulseLength;
 }
 
-//I2C STUFF-----------------------------------------------------------------------------
+//I2C-----------------------------------------------------------------------------
 GPIO_InitTypeDef GPIO_InitStructure;
 
 void I2C1_init(void)
@@ -196,9 +196,9 @@ void I2C_burst_write(uint8_t device_address, uint8_t address, uint8_t n_data, ui
 	I2C_GenerateSTOP(I2C1, ENABLE);
 	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY));
 }
-//END OF I2C STUFF-----------------------------------------------------------------------------
+//END OF I2C-----------------------------------------------------------------------------
 
-//PCA9685 STUFF--------------------------------------------------------------------------------------
+//PCA9685--------------------------------------------------------------------------------------
 void PCA9685_reset(uint8_t device_address)
 {
 	//	uint8_t reset_data[2];
@@ -271,9 +271,9 @@ void SpeedControl_SetServoAngle(uint8_t n, double angle, uint8_t pause)
 {
 
 }
-//END OF PCA9685 STUFF-------------------------------------------------------------------------------------------------------
+//END OF PCA9685-------------------------------------------------------------------------------------------------------
 
-//TIMERS STUFF--------------------------------------------------------------------------------------
+//TIMERS--------------------------------------------------------------------------------------
 /*
 void TIMER3_Init_Millisec()
 {
@@ -308,10 +308,10 @@ void SysTick_Handler(void)
 
 	TimeFromStart++;
 }
-//END OF TIMERS STUFF-------------------------------------------------------------------------------
+//END OF TIMERS-------------------------------------------------------------------------------
 
-//EXTERNAL INTERRUPTIONS STUFF----------------------------------------------------------------------
-
+//EXTERNAL INTERRUPTIONS----------------------------------------------------------------------
+//Interruptions for PPM 
 void EXTI0_IRQHandler(void)
 {
 	//reset interruption flag
@@ -390,8 +390,9 @@ void EXTI0_init(void)
 	//enable external interruptions of pin 0
 	NVIC_EnableIRQ(EXTI0_IRQn);
 }
-//END OF EXTERNAL INTERRUPTIONS STUFF---------------------------------------------------------------
+//END OF EXTERNAL INTERRUPTIONS---------------------------------------------------------------
 
+//HEXAPOD MOVEMENTS---------------------------------------------------------------------------
 void FindAngles(uint8_t LegNum, double x, double y, double z)
 {
 	double p = sqrt( x*x + y*y );
@@ -460,3 +461,12 @@ void FindAngles(uint8_t LegNum, double x, double y, double z)
 	q2 = q2rad * 180 / pi;
 }
 
+void MoveLeg(uint8_t LegNum, double x, double y, double z)
+{
+	FindAngles(LegNum, x, y, z);
+
+	SetServoAngle(LegNum * 3, q0);
+	SetServoAngle(LegNum * 3 + 1, q1);
+	SetServoAngle(LegNum * 3 + 2, q2);
+}
+//END OF HEXAPOD MOVEMENTS--------------------------------------------------------------------
