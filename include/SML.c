@@ -27,8 +27,8 @@ uint16_t delay_count = 0;
 bool ServoEnable = false;
 
 const uint8_t OA = 37;
-const uint8_t AB = 45;
-const uint8_t BC = 85;
+const uint8_t AB = 44;
+const uint8_t BC = 83;
 double pi = 3.14;
 double q0rad, q1rad, q2rad;
 double q0, q1, q2, Q, Qrad, Q0, Q0rad;
@@ -77,7 +77,7 @@ void digitalWrite(uint8_t port, uint8_t pin, bool value)
 void delay(int millisec)
 {
 	unsigned long start_time = TimeFromStart;
-	while (TimeFromStart != (start_time + (millisec * 1000)))
+	while (TimeFromStart <= (start_time + (millisec * 1000)))
 	{
 		//waiting
 	}
@@ -392,7 +392,7 @@ void EXTI0_init(void)
 }
 //END OF EXTERNAL INTERRUPTIONS STUFF---------------------------------------------------------------
 
-void FindAngles(int x, int y, int z)
+void FindAngles(double x, double y, double z)
 {
 	double p = sqrt( x*x + y*y );
 	double OC = sqrt( p*p + z*z );
@@ -407,10 +407,16 @@ void FindAngles(int x, int y, int z)
 	}		
 	else
 	{
-		q0rad = atan2(y, x);
+		q0rad = atan2(y, x);		//right side
+		//q0rad = atan(y/x) + pi;	      //back left 
 	}
 
-	q0 = q0rad * 180 / pi + 45;
+	//q0 = q0rad * 180 / pi + 45;		//front right
+	q0 = q0rad * 180 / pi + 96;		//mid right
+   //q0 = q0rad * 180 / pi + 135;	//back right
+	//q0 = q0rad * 180 / pi - 45;		//front left
+	//q0 = q0rad * 180 / pi - 90;		//mid left
+	//q0 = q0rad * 180 / pi - 135;		//back left
 
 	q1rad = Qrad + Q0rad;
 	q1 = q1rad * 180 / pi + 90;
