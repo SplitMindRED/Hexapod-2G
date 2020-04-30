@@ -6,6 +6,7 @@ float Last_InputX, Last_InputY, Last_InputZ;
 float CoordX, CoordY, CoordZ;
 float Throttle, Pitch, Roll, Yaw, Switch;
 
+
 void Setup()
 {
    //SETUP SYSTICK TIMER
@@ -118,7 +119,7 @@ void FrontRightLeg_square()
 
    for (uint16_t Y = 0; Y < 50; Y++)
    {
-      FindAngles(50, Y, -50);
+      FindAngles(2, 50, Y, -50);
 
       SetServoAngle(6, q0);
       SetServoAngle(7, q1);
@@ -130,7 +131,7 @@ void FrontRightLeg_square()
 
    for (uint16_t X = 50; X < 100; X++)
    {
-      FindAngles(X, 50, -50);
+      FindAngles(2, X, 50, -50);
 
       SetServoAngle(6, q0);
       SetServoAngle(7, q1);
@@ -142,7 +143,7 @@ void FrontRightLeg_square()
 
    for (uint16_t Y = 50; Y > 0; Y--)
    {
-      FindAngles(100, Y, -50);
+      FindAngles(2, 100, Y, -50);
 
       SetServoAngle(6, q0);
       SetServoAngle(7, q1);
@@ -154,7 +155,7 @@ void FrontRightLeg_square()
 
    for (uint16_t X = 100; X > 50; X--)
    {
-      FindAngles(X, 0, -50);
+      FindAngles(2, X, 0, -50);
 
       SetServoAngle(6, q0);
       SetServoAngle(7, q1);
@@ -180,7 +181,7 @@ int main()
 //line for mid right leg
       for (uint16_t Y = 0; Y < 50; Y++)
       {
-         FindAngles(50, Y, -50);
+         FindAngles(1, 50, Y, -50);
 
          SetServoAngle(3, q0);
          SetServoAngle(4, q1);
@@ -192,7 +193,7 @@ int main()
 
       for (uint16_t Y = 50; Y > 0; Y--)
       {
-         FindAngles(50, Y, -50);
+         FindAngles(1, 50, Y, -50);
 
          SetServoAngle(3, q0);
          SetServoAngle(4, q1);
@@ -205,29 +206,29 @@ int main()
 
 
 //line for back right leg
-//      for (int16_t Y = 0; Y > -50; Y--)
-//      {
-//         FindAngles(50, Y, -50);
+      for (int16_t Y = 0; Y > -50; Y--)
+      {
+         FindAngles(0, 50, Y, -50);
 
-//         SetServoAngle(0, q0);
-//         SetServoAngle(1, q1);
-//         SetServoAngle(2, q2);
-//         delay(pause);
-//      }
-//      
-//      delay(delaypause);
+         SetServoAngle(0, q0);
+         SetServoAngle(1, q1);
+         SetServoAngle(2, q2);
+         delay(pause);
+      }
+      
+      delay(delaypause);
 
-//      for (int16_t Y = -50; Y < 0; Y++)
-//      {
-//         FindAngles(50, Y, -50);
+      for (int16_t Y = -50; Y < 0; Y++)
+      {
+         FindAngles(0, 50, Y, -50);
 
-//         SetServoAngle(0, q0);
-//         SetServoAngle(1, q1);
-//         SetServoAngle(2, q2);
-//         delay(pause);
-//      }
+         SetServoAngle(0, q0);
+         SetServoAngle(1, q1);
+         SetServoAngle(2, q2);
+         delay(pause);
+      }
 
-//      delay(delaypause);
+      delay(delaypause);
 
 //line for front left leg
 //      for (int16_t Y = 0; Y < 50; Y++)

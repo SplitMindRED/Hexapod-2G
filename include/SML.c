@@ -392,7 +392,7 @@ void EXTI0_init(void)
 }
 //END OF EXTERNAL INTERRUPTIONS STUFF---------------------------------------------------------------
 
-void FindAngles(double x, double y, double z)
+void FindAngles(uint8_t LegNum, double x, double y, double z)
 {
 	double p = sqrt( x*x + y*y );
 	double OC = sqrt( p*p + z*z );
@@ -407,16 +407,51 @@ void FindAngles(double x, double y, double z)
 	}		
 	else
 	{
-		q0rad = atan2(y, x);		//right side
-		//q0rad = atan(y/x) + pi;	      //back left 
+		//right side
+		if (LegNum <= 2)
+		{
+			q0rad = atan2(y, x);
+		}
+		//left side
+		else
+		{
+			q0rad = atan(y / x) + pi;
+		}
+	}
+
+	switch (LegNum)
+	{
+	case 0:
+		q0 = q0rad * 180 / pi + 135;		//back right
+		break;
+
+	case 1:
+		q0 = q0rad * 180 / pi + 96;		//mid right
+		break;
+
+	case 2:
+		q0 = q0rad * 180 / pi + 45;		//front right
+		break;
+
+	case 3:
+		q0 = q0rad * 180 / pi - 45;		//front left
+		break;
+
+	case 4:
+		q0 = q0rad * 180 / pi - 90;		//mid left
+		break;
+
+	case 5:
+		q0 = q0rad * 180 / pi - 135;		//back left
+		break;
 	}
 
 	//q0 = q0rad * 180 / pi + 45;		//front right
-	q0 = q0rad * 180 / pi + 96;		//mid right
+	//q0 = q0rad * 180 / pi + 96;		//mid right
    //q0 = q0rad * 180 / pi + 135;	//back right
 	//q0 = q0rad * 180 / pi - 45;		//front left
 	//q0 = q0rad * 180 / pi - 90;		//mid left
-	//q0 = q0rad * 180 / pi - 135;		//back left
+	//q0 = q0rad * 180 / pi - 135;	//back left
 
 	q1rad = Qrad + Q0rad;
 	q1 = q1rad * 180 / pi + 90;

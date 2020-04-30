@@ -98,4 +98,4 @@ void EXTI0_IRQHandler(void);
 void EXTI0_init(void);
 //END OF EXTERNAL INTERRUPTIONS STUFF---------------------------------------------------------------
 
-void FindAngles(double x, double y, double z);
+void FindAngles(uint8_t LegNum, double x, double y, double z);
