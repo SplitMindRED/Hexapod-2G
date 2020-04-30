@@ -5,20 +5,12 @@ float InputX, InputY, InputZ;
 float Last_InputX, Last_InputY, Last_InputZ;
 float CoordX, CoordY, CoordZ;
 float Throttle, Pitch, Roll, Yaw, Switch;
-bool ServoEnable = false;
+
 
 void Setup()
 {
-//SETUP SYSTICK TIMER------------------------------------
-
-   //__enable_irq();
-
-   //SysTick -> LOAD = SystemCoreClock/1000;	//1ms
-   //SysTick->LOAD = SystemCoreClock / 1000000;	//1mcs
-
-   //SysTick->CTRL = 0b111;						      //start count
-   SysTick_Config(SystemCoreClock / 1000000);
-//------------------------------------------------------
+   //SETUP SYSTICK TIMER
+   SysTick_Config(SystemCoreClock / 1000000);   //1 mcs
     
     for (uint8_t i = 0; i < 6; i++)
     {
@@ -47,10 +39,20 @@ void Setup()
     I2C1_init();
     PCA9685_init(PCA9685_ADDRESS_1);
     PCA9685_init(PCA9685_ADDRESS_2);
+    delay(100);
     
     EXTI0_init();
     
    __enable_irq();
+
+   delay(100);
+   
+//   for (uint8_t ServoNum = 0; ServoNum < 18; ServoNum++)
+//    {
+//       SetServoAngle(ServoNum, 90);
+//    }
+    
+   
    //led on
    digitalWrite(PORT_C, 13, 0);
 }
@@ -89,18 +91,81 @@ void ServoTest4()
     //PCA9685_setPWM(PCA9685_ADDRESS_1, 2, 0, Roll * 0.465 - 365);
 }
 
-void FullServoTest()
+void FullServoTest(bool Mode)
 {
-   for (int i = 0; i < 18; i += 3)
+   if(Mode == 0)
    {
-      //SetServoAngle(i, (Throttle * 0.18 - 180));
-      //SetServoAngle(i + 1, (Pitch * 0.18 - 180));
-      //SetServoAngle(i + 2, (Roll * 0.18 - 180));
-      
-      SetServoAngle(i, (Channel[0] * 0.18 - 108));
-      SetServoAngle(i + 1, (Channel[1] * 0.18 - 108));
-      SetServoAngle(i + 2, (Channel[2] * 0.18 - 108));
+      for (int i = 0; i < 18; i += 3)
+      {
+         SetServoAngle(i, (Throttle * 0.18 - 180));
+         SetServoAngle(i + 1, (Pitch * 0.18 - 180));
+         SetServoAngle(i + 2, (Roll * 0.18 - 180));
+      }
    }
+   else
+   {
+      for (int i = 0; i < 18; i += 3)
+      {
+         
+         SetServoAngle(i, (Channel[0] * 0.18 - 108));
+         SetServoAngle(i + 1, (Channel[1] * 0.18 - 108));
+         SetServoAngle(i + 2, (Channel[2] * 0.18 - 108));
+      }
+   }
+}
+
+void FrontRightLeg_square()
+{
+   int pause = 20;
+   int delaypause = 2500;
+
+   for (uint16_t Y = 0; Y < 50; Y++)
+   {
+      FindAngles(2, 50, Y, -50);
+
+      SetServoAngle(6, q0);
+      SetServoAngle(7, q1);
+      SetServoAngle(8, q2);
+      delay(pause);
+   }
+
+   delay(delaypause);
+
+   for (uint16_t X = 50; X < 100; X++)
+   {
+      FindAngles(2, X, 50, -50);
+
+      SetServoAngle(6, q0);
+      SetServoAngle(7, q1);
+      SetServoAngle(8, q2);
+      delay(pause);
+   }
+
+   delay(delaypause);
+
+   for (uint16_t Y = 50; Y > 0; Y--)
+   {
+      FindAngles(2, 100, Y, -50);
+
+      SetServoAngle(6, q0);
+      SetServoAngle(7, q1);
+      SetServoAngle(8, q2);
+      delay(pause);
+   }
+
+   delay(delaypause);
+
+   for (uint16_t X = 100; X > 50; X--)
+   {
+      FindAngles(2, X, 0, -50);
+
+      SetServoAngle(6, q0);
+      SetServoAngle(7, q1);
+      SetServoAngle(8, q2);
+      delay(pause);
+   }
+
+   delay(delaypause);
 }
 
 int main()
@@ -109,23 +174,168 @@ int main()
 
    //main loop
    while (1)
-   {	       
-      //GetSignals();
-       
-      //ServoTest4();
-      if (Channel[4] > 1100)
-      {
-         ServoEnable = 0;
-      }
-      else
-      {
-         ServoEnable = 1;
-      }
-   
-      digitalWrite(PORT_A, 12, ServoEnable); //1-off 0-on     
-      digitalWrite(PORT_C, 13, ServoEnable); //1-led off, 0-led on
+   {
+      //FullServoTest(1);      
+
+      int pause = 20;
+      int delaypause = 1500;
+
       
-      FullServoTest();
+//      for (int16_t Y = -25; Y < 25; Y++)
+//      {
+//         MoveLeg(0, 50, Y, -50);
+//         MoveLeg(1, 50, Y, -50);
+//         MoveLeg(2, 50, Y, -50);
+
+//         MoveLeg(3, -50, Y, -50);
+//         MoveLeg(4, -50, Y, -50);
+//         MoveLeg(5, -50, Y, -50);
+//         
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+
+//      for (int16_t Y = 25; Y > -25; Y--)
+//      {
+//         MoveLeg(0, 50, Y, -50);
+//         MoveLeg(1, 50, Y, -50);
+//         MoveLeg(2, 50, Y, -50);
+//         
+//         MoveLeg(3, -50, Y, -50);
+//         MoveLeg(4, -50, Y, -50);
+//         MoveLeg(5, -50, Y, -50);
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+
+//line for mid right leg
+//      for (uint16_t Y = 0; Y < 50; Y++)
+//      {
+//         FindAngles(1, 50, Y, -50);
+
+//         SetServoAngle(3, q0);
+//         SetServoAngle(4, q1);
+//         SetServoAngle(5, q2);
+//         delay(pause);
+//      }
+//      
+//      delay(delaypause);
+
+//      for (uint16_t Y = 50; Y > 0; Y--)
+//      {
+//         FindAngles(1, 50, Y, -50);
+
+//         SetServoAngle(3, q0);
+//         SetServoAngle(4, q1);
+//         SetServoAngle(5, q2);
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+
+
+
+//line for back right leg
+//      for (int16_t Y = 0; Y > -50; Y--)
+//      {
+//         FindAngles(0, 50, Y, -50);
+
+//         SetServoAngle(0, q0);
+//         SetServoAngle(1, q1);
+//         SetServoAngle(2, q2);
+//         delay(pause);
+//      }
+//      
+//      delay(delaypause);
+
+//      for (int16_t Y = -50; Y < 0; Y++)
+//      {
+//         FindAngles(0, 50, Y, -50);
+
+//         SetServoAngle(0, q0);
+//         SetServoAngle(1, q1);
+//         SetServoAngle(2, q2);
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+
+//line for front left leg
+//      for (int16_t Y = 0; Y < 50; Y++)
+//      {
+//         FindAngles(-50, Y, -50);
+
+//         SetServoAngle(9, q0);
+//         SetServoAngle(10, q1);
+//         SetServoAngle(11, q2);
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+
+//      for (int16_t Y = 50; Y > 0; Y--)
+//      {
+//         FindAngles(-50, Y, -50);
+
+//         SetServoAngle(9, q0);
+//         SetServoAngle(10, q1);
+//         SetServoAngle(11, q2);
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+
+//line for mid left leg
+//      for (int16_t Y = 0; Y < 50; Y++)
+//      {
+//         FindAngles(-50, Y, -50);
+
+//         SetServoAngle(12, q0);
+//         SetServoAngle(13, q1);
+//         SetServoAngle(14, q2);
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+
+//      for (int16_t Y = 50; Y > 0; Y--)
+//      {
+//         FindAngles(-50, Y, -50);
+
+//         SetServoAngle(12, q0);
+//         SetServoAngle(13, q1);
+//         SetServoAngle(14, q2);
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+      
+//line for back left leg
+//      for (int16_t Y = 0; Y > -50; Y--)
+//      {
+//         FindAngles(-50, Y, -50);
+
+//         SetServoAngle(15, q0);
+//         SetServoAngle(16, q1);
+//         SetServoAngle(17, q2);
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+
+//      for (int16_t Y = -50; Y < 0; Y++)
+//      {
+//         FindAngles(-50, Y, -50);
+
+//         SetServoAngle(15, q0);
+//         SetServoAngle(16, q1);
+//         SetServoAngle(17, q2);
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
 
    }
 }
