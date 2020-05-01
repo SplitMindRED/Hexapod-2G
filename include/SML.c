@@ -47,8 +47,8 @@ int16_t LocalTrajectoryLeg2[4][3] = {
 	{60, 90, -50},
 };
 
-int16_t LocalCurrentLegPosition[6][3];
-int16_t LocalTargetLegPosition[6][3];
+float LocalCurrentLegPosition[6][3];
+float LocalTargetLegPosition[6][3];
 bool FlagLegReady[6] = {1, 1, 1, 1, 1, 1};
 //--------------------------------------------
 
@@ -133,7 +133,7 @@ uint64_t pulseIN(uint8_t PIN)
 	return PulseLength;
 }
 
-//I2C-----------------------------------------------------------------------------
+//I2C----------------------------------------------------------------------------------------------------
 GPIO_InitTypeDef GPIO_InitStructure;
 
 void I2C1_init(void)
@@ -216,9 +216,9 @@ void I2C_burst_write(uint8_t device_address, uint8_t address, uint8_t n_data, ui
 	I2C_GenerateSTOP(I2C1, ENABLE);
 	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY));
 }
-//END OF I2C-----------------------------------------------------------------------------
+//END OF I2C---------------------------------------------------------------------------------------------
 
-//PCA9685--------------------------------------------------------------------------------------
+//PCA9685------------------------------------------------------------------------------------------------
 void PCA9685_reset(uint8_t device_address)
 {
 	//	uint8_t reset_data[2];
@@ -240,6 +240,13 @@ void PCA9685_init(uint8_t device_address)
 
 	//normal mode
 	I2C_WriteByte(device_address, 0x00, 0xA1);
+
+	//0 PWM
+	for (uint8_t ServoNum = 0; ServoNum < 18; ServoNum++)
+	{
+		//PCA9685_setPWM(PCA9685_ADDRESS_1, ServoNum, 0, 1);
+	}
+	
 }
 
 void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint16_t off)
@@ -287,68 +294,14 @@ void SetServoAngle(uint8_t ServoNum, double angle)
 	}	
 }
 
-void SpeedControl(uint8_t LegNum, uint8_t pause)
+uint8_t PhaseControl()
 {
-	if (FlagLegReady[LegNum] == true)
-	{
-		LocalTargetLegPosition[LegNum][0] = LocalTrajectoryLeg2[TrajectoryStep[LegNum]][0];	//x
-		LocalTargetLegPosition[LegNum][1] = LocalTrajectoryLeg2[TrajectoryStep[LegNum]][1];	//y
-		LocalTargetLegPosition[LegNum][2] = LocalTrajectoryLeg2[TrajectoryStep[LegNum]][2];	//z
-
-		//leg busy
-		FlagLegReady[LegNum] = false;
-	}
 	
-
-	//if we are already in target position -> set flag and step++
-	if (	LocalCurrentLegPosition[LegNum][0] == LocalTargetLegPosition[LegNum][0] &&
-			LocalCurrentLegPosition[LegNum][1] == LocalTargetLegPosition[LegNum][1] &&
-			LocalCurrentLegPosition[LegNum][2] == LocalTargetLegPosition[LegNum][2]    )
-	{
-		FlagLegReady[LegNum] = true;
-		TrajectoryStep[LegNum]++;
-		
-		if (TrajectoryStep[LegNum] == 4)
-		{
-			TrajectoryStep[LegNum] = 0;
-		}
-	}
-	else
-	{
-		//X
-		if (LocalTargetLegPosition[LegNum][0] > LocalCurrentLegPosition[LegNum][0])
-		{
-			LocalCurrentLegPosition[LegNum][0]++;
-		}
-		else if (LocalTargetLegPosition[LegNum][0] < LocalCurrentLegPosition[LegNum][0])
-		{
-			LocalCurrentLegPosition[LegNum][0]--;
-		}
-
-		//Y
-		if (LocalTargetLegPosition[LegNum][1] > LocalCurrentLegPosition[LegNum][1])
-		{
-			LocalCurrentLegPosition[LegNum][1]++;
-		}
-		else if (LocalTargetLegPosition[LegNum][1] < LocalCurrentLegPosition[LegNum][1])
-		{
-			LocalCurrentLegPosition[LegNum][1]--;
-		}
-
-		//Z
-		if (LocalTargetLegPosition[LegNum][2] > LocalCurrentLegPosition[LegNum][2])
-		{
-			LocalCurrentLegPosition[LegNum][2]++;
-		}
-		else if (LocalTargetLegPosition[LegNum][2] < LocalCurrentLegPosition[LegNum][2])
-		{
-			LocalCurrentLegPosition[LegNum][2]--;
-		}
-	}
+	
 }
-//END OF PCA9685-------------------------------------------------------------------------------------------------------
+//END OF PCA9685-----------------------------------------------------------------------------------------
 
-//TIMERS--------------------------------------------------------------------------------------
+//TIMERS-------------------------------------------------------------------------------------------------
 /*
 void TIMER3_Init_Millisec()
 {
@@ -383,9 +336,9 @@ void SysTick_Handler(void)
 
 	TimeFromStart++;
 }
-//END OF TIMERS-------------------------------------------------------------------------------
+//END OF TIMERS------------------------------------------------------------------------------------------
 
-//EXTERNAL INTERRUPTIONS----------------------------------------------------------------------
+//EXTERNAL INTERRUPTIONS---------------------------------------------------------------------------------
 //Interruptions for PPM 
 void EXTI0_IRQHandler(void)
 {
@@ -465,9 +418,9 @@ void EXTI0_init(void)
 	//enable external interruptions of pin 0
 	NVIC_EnableIRQ(EXTI0_IRQn);
 }
-//END OF EXTERNAL INTERRUPTIONS---------------------------------------------------------------
+//END OF EXTERNAL INTERRUPTIONS--------------------------------------------------------------------------
 
-//HEXAPOD MOVEMENTS---------------------------------------------------------------------------
+//HEXAPOD MOVEMENTS--------------------------------------------------------------------------------------
 void FindAngles(uint8_t LegNum, double x, double y, double z)
 {
 	double p = sqrt( x*x + y*y );
@@ -548,4 +501,4 @@ void MoveLeg(uint8_t LegNum, double x, double y, double z)
 	LocalCurrentLegPosition[LegNum][1] = y;
 	LocalCurrentLegPosition[LegNum][2] = z;
 }
-//END OF HEXAPOD MOVEMENTS--------------------------------------------------------------------
+//END OF HEXAPOD MOVEMENTS-------------------------------------------------------------------------------

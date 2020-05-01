@@ -28,14 +28,18 @@ Project File Date:  04/30/2020
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Program Files (x86)\Keil5\ARM\ARMCC\Bin'
 Build target 'Main'
 compiling main.c...
-src\main.c(194): warning:  #177-D: variable "pause"  was declared but never referenced
-        int pause = 20;
-src\main.c(195): warning:  #177-D: variable "delaypause"  was declared but never referenced
-        int delaypause = 1500;
-src\main.c: 2 warnings, 0 errors
+.\include\SML.h(95): warning:  #1295-D: Deprecated declaration PhaseControl - give arg types
+  uint8_t PhaseControl();
+src\main.c: 1 warning, 0 errors
+compiling SML.c...
+include\SML.h(95): warning:  #1295-D: Deprecated declaration PhaseControl - give arg types
+  uint8_t PhaseControl();
+include\SML.c(301): warning:  #940-D: missing return statement at end of non-void function "PhaseControl" 
+  }
+include\SML.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=10660 RO-data=508 RW-data=240 ZI-data=1728  
-".\Objects\Hexapod 2G.axf" - 0 Error(s), 2 Warning(s).
+Program Size: Code=11340 RO-data=508 RW-data=256 ZI-data=1824  
+".\Objects\Hexapod 2G.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -80,37 +84,37 @@ Package Vendor: Keil
       Source file:   Source\retarget_io.c
 
    * Component: Keil::Device:GPIO:1.3
-      Include file:  RTE_Driver\GPIO_STM32F10x.h
       Source file:   RTE_Driver\GPIO_STM32F10x.c
+      Include file:  RTE_Driver\GPIO_STM32F10x.h
 
    * Component: Keil::Device:Startup:1.0.0
       Source file:   Device\Source\system_stm32f10x.c
-      Include file:  RTE_Driver\Config\RTE_Device.h
       Source file:   Device\Source\ARM\startup_stm32f10x_md.s
+      Include file:  RTE_Driver\Config\RTE_Device.h
       Source file:   Device\Source\ARM\STM32F1xx_OPT.s
 
    * Component: Keil::Device:StdPeriph Drivers:Framework:3.5.1
       Source file:   Device\StdPeriph_Driver\templates\stm32f10x_it.c
       Include file:  Device\StdPeriph_Driver\inc\misc.h
+      Source file:   Device\StdPeriph_Driver\src\misc.c
       Source file:   Device\StdPeriph_Driver\templates\stm32f10x_conf.h
       Include file:  Device\StdPeriph_Driver\templates\stm32f10x_it.h
-      Source file:   Device\StdPeriph_Driver\src\misc.c
 
    * Component: Keil::Device:StdPeriph Drivers:GPIO:3.5.0
-      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_gpio.c
+      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
 
    * Component: Keil::Device:StdPeriph Drivers:I2C:3.5.0
-      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_i2c.h
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_i2c.c
+      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_i2c.h
 
    * Component: Keil::Device:StdPeriph Drivers:RCC:3.5.0
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_rcc.c
       Include file:  Device\StdPeriph_Driver\inc\stm32f10x_rcc.h
 
    * Component: Keil::Device:StdPeriph Drivers:SPI:3.5.0
-      Source file:   Device\StdPeriph_Driver\src\stm32f10x_spi.c
       Include file:  Device\StdPeriph_Driver\inc\stm32f10x_spi.h
+      Source file:   Device\StdPeriph_Driver\src\stm32f10x_spi.c
 
    * Component: Keil::Device:StdPeriph Drivers:TIM:3.5.0
       Include file:  Device\StdPeriph_Driver\inc\stm32f10x_tim.h

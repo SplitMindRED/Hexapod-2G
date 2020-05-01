@@ -71,8 +71,8 @@ extern double q0, q1, q2;
 extern uint8_t TrajectoryStep[6];
 //local trajectory for each leg [step][xyz coord]
 extern int16_t LocalTrajectoryLeg2[4][3];
-extern int16_t LocalCurrentLegPosition[6][3];
-extern int16_t LocalTargetLegPosition[6][3];
+extern float LocalCurrentLegPosition[6][3];
+extern float LocalTargetLegPosition[6][3];
 extern bool FlagLegReady[6];
 //--------------------------------------------
 
@@ -92,7 +92,7 @@ void PCA9685_reset(uint8_t device_address);
 void PCA9685_init(uint8_t device_address);
 void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint16_t off);
 void SetServoAngle(uint8_t ServoNum, double angle);
-void SpeedControl(uint8_t LegNum, uint8_t pause);
+uint8_t PhaseControl();
 //END OF PCA9685-------------------------------------------------------------------------------
 
 //TIMERS---------------------------------------------------------------------------------------

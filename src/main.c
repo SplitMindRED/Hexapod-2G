@@ -5,8 +5,12 @@ float InputX, InputY, InputZ;
 float Last_InputX, Last_InputY, Last_InputZ;
 float CoordX, CoordY, CoordZ;
 float Throttle, Pitch, Roll, Yaw, Switch;
+float Xt, Yt[6], Zt;
 
-unsigned long NextTime = 100000;
+int16_t Y_amplitude = 0;
+
+
+unsigned long NextTime = 1000;
 
 
 void Setup()
@@ -63,7 +67,12 @@ void Setup()
       }
    }
 
-   MoveLeg(2, 60, 60, -50);
+   MoveLeg(0, 57.276, -57.276, -83);
+   MoveLeg(1, 81, 0, -83);
+   MoveLeg(2, 57.276, 57.276, -83);
+   MoveLeg(3, -57.276, 57.276, -83);
+   MoveLeg(4, -81, 0, -83);
+   MoveLeg(5, -57.276, -57.276, -83);
 
    
    
@@ -185,59 +194,56 @@ void FrontRightLeg_square()
 int main()
 {
    Setup();
+   
+   Vy = 30;
+   uint8_t Phase = 1;
+   Y_amplitude = 60;                   //60 mm aplitude in Y axis
 
    //main loop
    while (1)
    {
-      //FullServoTest(1);      
+      //FullServoTest(1);  
 
-      int pause = 20;
-      int delaypause = 1500;
-
-      
-//      for (int16_t Y = -25; Y < 25; Y++)
-//      {
-//         MoveLeg(0, 50, Y, -50);
-//         MoveLeg(1, 50, Y, -50);
-//         MoveLeg(2, 50, Y, -50);
-
-//         MoveLeg(3, -50, Y, -50);
-//         MoveLeg(4, -50, Y, -50);
-//         MoveLeg(5, -50, Y, -50);
-//         
-//         delay(pause);
-//      }
-
-//      delay(delaypause);
-
-//      for (int16_t Y = 25; Y > -25; Y--)
-//      {
-//         MoveLeg(0, 50, Y, -50);
-//         MoveLeg(1, 50, Y, -50);
-//         MoveLeg(2, 50, Y, -50);
-//         
-//         MoveLeg(3, -50, Y, -50);
-//         MoveLeg(4, -50, Y, -50);
-//         MoveLeg(5, -50, Y, -50);
-//         delay(pause);
-//      }
-
-//      delay(delaypause);
-
-      
-
-      if ((TimeFromStart + 10000) >= NextTime)
+      if ((TimeFromStart + 1000) >= NextTime)
       {
-         SpeedControl(2, 10);
-         
-         if(FlagLegReady[2] == false)
-         {
-            MoveLeg(2, LocalCurrentLegPosition[2][0], LocalCurrentLegPosition[2][1], LocalCurrentLegPosition[2][2]);
-         }
-         
-         NextTime = TimeFromStart + 25000; //10 ms
-      }
-      
 
+         switch (Phase)
+         {
+         case 1:
+
+            //Y
+            Yt[2] = LocalCurrentLegPosition[2][1] - Vy / 1000;
+
+            MoveLeg(2, 60, Yt[2], -50);
+
+            if (Yt[2] <= -30)
+            {
+               Phase = 2;
+            }
+
+            break;
+
+         case 2:
+
+            //Y
+            Yt[2] = LocalCurrentLegPosition[2][1] + Vy / 1000;
+
+            //Z
+            Zt = -0.0166 * Yt[2] * Yt[2] - 35;
+
+            MoveLeg(2, 60, Yt[2], Zt);
+
+            if (Yt[2] >= 30)
+            {
+               Phase = 1;
+            }
+
+            break;
+         }
+
+         NextTime = TimeFromStart + 1000; //1 ms
+      }
+
+      
    }
 }
