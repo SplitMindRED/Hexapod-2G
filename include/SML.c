@@ -17,21 +17,41 @@
 #include "SML.h"
 
 unsigned long TimeFromStart = 0;
-unsigned long Millis = 0;
 unsigned long CurrentInterruptionTime = 0;
 uint16_t deltaInterruptionTime = 0;
 uint8_t ChannelCounter = 0;
 bool StartPackage = false;
 float Channel[6];
+
 uint16_t delay_count = 0;
+
 bool ServoEnable = false;
 
+//geometry variables--------------------------
 const uint8_t OA = 37;
 const uint8_t AB = 44;
 const uint8_t BC = 83;
 double pi = 3.14;
-double q0rad, q1rad, q2rad;
-double q0, q1, q2, Q, Qrad, Q0, Q0rad;
+double q0rad, q1rad, q2rad, Qrad, Q0rad;
+double q0, q1, q2;
+//--------------------------------------------
+
+//movements and trajectory variables
+uint8_t TrajectoryStep[6] = { 0, 0, 0, 0, 0, 0};
+//local trajectory for each leg [step][leg][xyz coord]
+int16_t LocalTrajectoryLeg2[4][3] = {
+//{x, y, z} Step
+	{60, 60, -50},
+	{60, 30, -50},
+	{60, 60, -35},
+	{60, 90, -50},
+};
+
+float LocalCurrentLegPosition[6][3];
+float LocalTargetLegPosition[6][3];
+bool FlagLegReady[6] = {1, 1, 1, 1, 1, 1};
+//--------------------------------------------
+
 //set mode of pin of port. look to define for parameters
 void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config)
 {
@@ -113,7 +133,7 @@ uint64_t pulseIN(uint8_t PIN)
 	return PulseLength;
 }
 
-//I2C-----------------------------------------------------------------------------
+//I2C----------------------------------------------------------------------------------------------------
 GPIO_InitTypeDef GPIO_InitStructure;
 
 void I2C1_init(void)
@@ -196,9 +216,9 @@ void I2C_burst_write(uint8_t device_address, uint8_t address, uint8_t n_data, ui
 	I2C_GenerateSTOP(I2C1, ENABLE);
 	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY));
 }
-//END OF I2C-----------------------------------------------------------------------------
+//END OF I2C---------------------------------------------------------------------------------------------
 
-//PCA9685--------------------------------------------------------------------------------------
+//PCA9685------------------------------------------------------------------------------------------------
 void PCA9685_reset(uint8_t device_address)
 {
 	//	uint8_t reset_data[2];
@@ -220,6 +240,13 @@ void PCA9685_init(uint8_t device_address)
 
 	//normal mode
 	I2C_WriteByte(device_address, 0x00, 0xA1);
+
+	//0 PWM
+	for (uint8_t ServoNum = 0; ServoNum < 18; ServoNum++)
+	{
+		//PCA9685_setPWM(PCA9685_ADDRESS_1, ServoNum, 0, 1);
+	}
+	
 }
 
 void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint16_t off)
@@ -234,7 +261,7 @@ void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint1
 	I2C_WriteByte(device_address, 0x06 + 4 * ServoNum + 3, off >> 8);
 }
 
-void SetServoAngle(uint8_t n, double angle)
+void SetServoAngle(uint8_t ServoNum, double angle)
 {
    if(angle < 0)
    {
@@ -243,37 +270,38 @@ void SetServoAngle(uint8_t n, double angle)
 	double deg_to_pulse = 100 + (SERVOMAX - SERVOMIN) * angle / 180;
 	double deg_to_pulse_left = 100 + (SERVOMAX - SERVOMIN) * (180-angle) / 180;
 
-	if (n < 9)
+	if (ServoNum < 9)
 	{
-        if(n == 2 || n == 5 || n == 8)
+        if(ServoNum == 2 || ServoNum == 5 || ServoNum == 8)
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_1, n, 0, deg_to_pulse_left);
+            PCA9685_setPWM(PCA9685_ADDRESS_1, ServoNum, 0, deg_to_pulse_left);
         }
         else
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_1, n, 0, deg_to_pulse);
+            PCA9685_setPWM(PCA9685_ADDRESS_1, ServoNum, 0, deg_to_pulse);
         }		
 	}
 	else
 	{
-        if(n == 10 || n == 13 || n == 16)
+        if(ServoNum == 10 || ServoNum == 13 || ServoNum == 16)
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_2, n-2, 0, deg_to_pulse_left);
+            PCA9685_setPWM(PCA9685_ADDRESS_2, ServoNum -2, 0, deg_to_pulse_left);
         }
         else
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_2, n-2, 0, deg_to_pulse);
+            PCA9685_setPWM(PCA9685_ADDRESS_2, ServoNum -2, 0, deg_to_pulse);
         }		
 	}	
 }
 
-void SpeedControl_SetServoAngle(uint8_t n, double angle, uint8_t pause)
+uint8_t PhaseControl()
 {
-
+	
+	
 }
-//END OF PCA9685-------------------------------------------------------------------------------------------------------
+//END OF PCA9685-----------------------------------------------------------------------------------------
 
-//TIMERS--------------------------------------------------------------------------------------
+//TIMERS-------------------------------------------------------------------------------------------------
 /*
 void TIMER3_Init_Millisec()
 {
@@ -308,9 +336,9 @@ void SysTick_Handler(void)
 
 	TimeFromStart++;
 }
-//END OF TIMERS-------------------------------------------------------------------------------
+//END OF TIMERS------------------------------------------------------------------------------------------
 
-//EXTERNAL INTERRUPTIONS----------------------------------------------------------------------
+//EXTERNAL INTERRUPTIONS---------------------------------------------------------------------------------
 //Interruptions for PPM 
 void EXTI0_IRQHandler(void)
 {
@@ -390,9 +418,9 @@ void EXTI0_init(void)
 	//enable external interruptions of pin 0
 	NVIC_EnableIRQ(EXTI0_IRQn);
 }
-//END OF EXTERNAL INTERRUPTIONS---------------------------------------------------------------
+//END OF EXTERNAL INTERRUPTIONS--------------------------------------------------------------------------
 
-//HEXAPOD MOVEMENTS---------------------------------------------------------------------------
+//HEXAPOD MOVEMENTS--------------------------------------------------------------------------------------
 void FindAngles(uint8_t LegNum, double x, double y, double z)
 {
 	double p = sqrt( x*x + y*y );
@@ -468,5 +496,9 @@ void MoveLeg(uint8_t LegNum, double x, double y, double z)
 	SetServoAngle(LegNum * 3, q0);
 	SetServoAngle(LegNum * 3 + 1, q1);
 	SetServoAngle(LegNum * 3 + 2, q2);
+
+	LocalCurrentLegPosition[LegNum][0] = x;
+	LocalCurrentLegPosition[LegNum][1] = y;
+	LocalCurrentLegPosition[LegNum][2] = z;
 }
-//END OF HEXAPOD MOVEMENTS--------------------------------------------------------------------
+//END OF HEXAPOD MOVEMENTS-------------------------------------------------------------------------------
