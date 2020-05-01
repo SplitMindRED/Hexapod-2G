@@ -242,8 +242,6 @@ int main()
          }
 
          NextTime = TimeFromStart + 1000; //1 ms
-      }
-
-      
+      }      
    }
 }
