@@ -52,6 +52,12 @@
 #define PCA9685_ADDRESS_1           0x80
 #define PCA9685_ADDRESS_2           0x82
 
+//Hexapod parametres
+#define X_OFFSET                    40
+#define Y_OFFSET                    40
+#define STARTHEIGHT                 70
+#define DELTAHEIGHT                 25
+
 extern unsigned long TimeFromStart;
 extern unsigned long CurrentInterruptionTime;
 extern uint16_t deltaInterruptionTime;
@@ -70,10 +76,16 @@ extern double q0, q1, q2;
 //movements and trajectory variables
 extern uint8_t TrajectoryStep[6];
 //local trajectory for each leg [step][xyz coord]
-extern int16_t LocalTrajectoryLeg2[4][3];
 extern float LocalCurrentLegPosition[6][3];
 extern float LocalTargetLegPosition[6][3];
+extern int16_t LocalStartPoint[6][3];
 extern bool FlagLegReady[6];
+extern bool Phase[2];
+extern int16_t Y_amplitude;
+
+extern float k;
+extern float dH;
+extern float H;
 //--------------------------------------------
 
 void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config);
@@ -92,7 +104,7 @@ void PCA9685_reset(uint8_t device_address);
 void PCA9685_init(uint8_t device_address);
 void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint16_t off);
 void SetServoAngle(uint8_t ServoNum, double angle);
-uint8_t PhaseControl();
+bool PhaseControl(uint8_t GroupNum);
 //END OF PCA9685-------------------------------------------------------------------------------
 
 //TIMERS---------------------------------------------------------------------------------------

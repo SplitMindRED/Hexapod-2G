@@ -39,17 +39,26 @@ double q0, q1, q2;
 //movements and trajectory variables
 uint8_t TrajectoryStep[6] = { 0, 0, 0, 0, 0, 0};
 //local trajectory for each leg [step][leg][xyz coord]
-int16_t LocalTrajectoryLeg2[4][3] = {
-//{x, y, z} Step
-	{60, 60, -50},
-	{60, 30, -50},
-	{60, 60, -35},
-	{60, 90, -50},
+
+int16_t LocalStartPoint[6][3] = {
+	 {X_OFFSET,       -Y_OFFSET,  -STARTHEIGHT},
+	 {X_OFFSET+30,    0,          -STARTHEIGHT},
+	 {X_OFFSET,       Y_OFFSET,   -STARTHEIGHT},
+	 {-X_OFFSET,      Y_OFFSET,   -STARTHEIGHT},
+	 {-X_OFFSET-30,   0,          -STARTHEIGHT},
+	 {-X_OFFSET,      -Y_OFFSET,  -STARTHEIGHT},
 };
 
 float LocalCurrentLegPosition[6][3];
 float LocalTargetLegPosition[6][3];
 bool FlagLegReady[6] = {1, 1, 1, 1, 1, 1};
+bool Phase[2] = { 0, 1 };
+int16_t Y_amplitude = 70;                   //60 mm aplitude in Y axis
+
+float k = 0;
+float dH = DELTAHEIGHT;
+float H = STARTHEIGHT;
+
 //--------------------------------------------
 
 //set mode of pin of port. look to define for parameters
@@ -294,10 +303,15 @@ void SetServoAngle(uint8_t ServoNum, double angle)
 	}	
 }
 
-uint8_t PhaseControl()
+bool PhaseControl(uint8_t GroupNum)
 {
-	
-	
+	if (LocalCurrentLegPosition[GroupNum][1] <= LocalStartPoint[GroupNum][1] - Y_amplitude / 2 ||
+		LocalCurrentLegPosition[GroupNum][1] >= LocalStartPoint[GroupNum][1] + Y_amplitude / 2)
+	{
+		Phase[GroupNum] = !Phase[GroupNum];
+	}
+
+	return Phase[GroupNum];
 }
 //END OF PCA9685-----------------------------------------------------------------------------------------
 
