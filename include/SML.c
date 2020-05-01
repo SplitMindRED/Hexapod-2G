@@ -17,21 +17,41 @@
 #include "SML.h"
 
 unsigned long TimeFromStart = 0;
-unsigned long Millis = 0;
 unsigned long CurrentInterruptionTime = 0;
 uint16_t deltaInterruptionTime = 0;
 uint8_t ChannelCounter = 0;
 bool StartPackage = false;
 float Channel[6];
+
 uint16_t delay_count = 0;
+
 bool ServoEnable = false;
 
+//geometry variables--------------------------
 const uint8_t OA = 37;
 const uint8_t AB = 44;
 const uint8_t BC = 83;
 double pi = 3.14;
-double q0rad, q1rad, q2rad;
-double q0, q1, q2, Q, Qrad, Q0, Q0rad;
+double q0rad, q1rad, q2rad, Qrad, Q0rad;
+double q0, q1, q2;
+//--------------------------------------------
+
+//movements and trajectory variables
+uint8_t TrajectoryStep[6] = { 0, 0, 0, 0, 0, 0};
+//local trajectory for each leg [step][leg][xyz coord]
+int16_t LocalTrajectoryLeg2[4][3] = {
+//{x, y, z} Step
+	{60, 60, -50},
+	{60, 30, -50},
+	{60, 60, -35},
+	{60, 90, -50},
+};
+
+int16_t LocalCurrentLegPosition[6][3];
+int16_t LocalTargetLegPosition[6][3];
+bool FlagLegReady[6] = {1, 1, 1, 1, 1, 1};
+//--------------------------------------------
+
 //set mode of pin of port. look to define for parameters
 void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config)
 {
@@ -234,7 +254,7 @@ void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint1
 	I2C_WriteByte(device_address, 0x06 + 4 * ServoNum + 3, off >> 8);
 }
 
-void SetServoAngle(uint8_t n, double angle)
+void SetServoAngle(uint8_t ServoNum, double angle)
 {
    if(angle < 0)
    {
@@ -243,33 +263,88 @@ void SetServoAngle(uint8_t n, double angle)
 	double deg_to_pulse = 100 + (SERVOMAX - SERVOMIN) * angle / 180;
 	double deg_to_pulse_left = 100 + (SERVOMAX - SERVOMIN) * (180-angle) / 180;
 
-	if (n < 9)
+	if (ServoNum < 9)
 	{
-        if(n == 2 || n == 5 || n == 8)
+        if(ServoNum == 2 || ServoNum == 5 || ServoNum == 8)
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_1, n, 0, deg_to_pulse_left);
+            PCA9685_setPWM(PCA9685_ADDRESS_1, ServoNum, 0, deg_to_pulse_left);
         }
         else
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_1, n, 0, deg_to_pulse);
+            PCA9685_setPWM(PCA9685_ADDRESS_1, ServoNum, 0, deg_to_pulse);
         }		
 	}
 	else
 	{
-        if(n == 10 || n == 13 || n == 16)
+        if(ServoNum == 10 || ServoNum == 13 || ServoNum == 16)
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_2, n-2, 0, deg_to_pulse_left);
+            PCA9685_setPWM(PCA9685_ADDRESS_2, ServoNum -2, 0, deg_to_pulse_left);
         }
         else
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_2, n-2, 0, deg_to_pulse);
+            PCA9685_setPWM(PCA9685_ADDRESS_2, ServoNum -2, 0, deg_to_pulse);
         }		
 	}	
 }
 
-void SpeedControl_SetServoAngle(uint8_t n, double angle, uint8_t pause)
+void SpeedControl(uint8_t LegNum, uint8_t pause)
 {
+	if (FlagLegReady[LegNum] == true)
+	{
+		LocalTargetLegPosition[LegNum][0] = LocalTrajectoryLeg2[TrajectoryStep[LegNum]][0];	//x
+		LocalTargetLegPosition[LegNum][1] = LocalTrajectoryLeg2[TrajectoryStep[LegNum]][1];	//y
+		LocalTargetLegPosition[LegNum][2] = LocalTrajectoryLeg2[TrajectoryStep[LegNum]][2];	//z
 
+		//leg busy
+		FlagLegReady[LegNum] = false;
+	}
+	
+
+	//if we are already in target position -> set flag and step++
+	if (	LocalCurrentLegPosition[LegNum][0] == LocalTargetLegPosition[LegNum][0] &&
+			LocalCurrentLegPosition[LegNum][1] == LocalTargetLegPosition[LegNum][1] &&
+			LocalCurrentLegPosition[LegNum][2] == LocalTargetLegPosition[LegNum][2]    )
+	{
+		FlagLegReady[LegNum] = true;
+		TrajectoryStep[LegNum]++;
+		
+		if (TrajectoryStep[LegNum] == 4)
+		{
+			TrajectoryStep[LegNum] = 0;
+		}
+	}
+	else
+	{
+		//X
+		if (LocalTargetLegPosition[LegNum][0] > LocalCurrentLegPosition[LegNum][0])
+		{
+			LocalCurrentLegPosition[LegNum][0]++;
+		}
+		else if (LocalTargetLegPosition[LegNum][0] < LocalCurrentLegPosition[LegNum][0])
+		{
+			LocalCurrentLegPosition[LegNum][0]--;
+		}
+
+		//Y
+		if (LocalTargetLegPosition[LegNum][1] > LocalCurrentLegPosition[LegNum][1])
+		{
+			LocalCurrentLegPosition[LegNum][1]++;
+		}
+		else if (LocalTargetLegPosition[LegNum][1] < LocalCurrentLegPosition[LegNum][1])
+		{
+			LocalCurrentLegPosition[LegNum][1]--;
+		}
+
+		//Z
+		if (LocalTargetLegPosition[LegNum][2] > LocalCurrentLegPosition[LegNum][2])
+		{
+			LocalCurrentLegPosition[LegNum][2]++;
+		}
+		else if (LocalTargetLegPosition[LegNum][2] < LocalCurrentLegPosition[LegNum][2])
+		{
+			LocalCurrentLegPosition[LegNum][2]--;
+		}
+	}
 }
 //END OF PCA9685-------------------------------------------------------------------------------------------------------
 
@@ -468,5 +543,9 @@ void MoveLeg(uint8_t LegNum, double x, double y, double z)
 	SetServoAngle(LegNum * 3, q0);
 	SetServoAngle(LegNum * 3 + 1, q1);
 	SetServoAngle(LegNum * 3 + 2, q2);
+
+	LocalCurrentLegPosition[LegNum][0] = x;
+	LocalCurrentLegPosition[LegNum][1] = y;
+	LocalCurrentLegPosition[LegNum][2] = z;
 }
 //END OF HEXAPOD MOVEMENTS--------------------------------------------------------------------

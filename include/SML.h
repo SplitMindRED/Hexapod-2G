@@ -53,17 +53,28 @@
 #define PCA9685_ADDRESS_2           0x82
 
 extern unsigned long TimeFromStart;
-extern unsigned long Millis;
 extern unsigned long CurrentInterruptionTime;
 extern uint16_t deltaInterruptionTime;
 extern uint8_t ChannelCounter;
 extern bool StartPackage;
 extern float Channel[6];
-extern bool ServoEnable;
+
 extern uint16_t delay_count;
-extern double pi;
-extern double q0rad, q1rad, q2rad;
-extern double q0, q1, q2, Q, Qrad, Q0, Q0rad;
+
+extern bool ServoEnable;
+
+//servo angles--------------------------
+extern double q0, q1, q2;
+//--------------------------------------
+
+//movements and trajectory variables
+extern uint8_t TrajectoryStep[6];
+//local trajectory for each leg [step][xyz coord]
+extern int16_t LocalTrajectoryLeg2[4][3];
+extern int16_t LocalCurrentLegPosition[6][3];
+extern int16_t LocalTargetLegPosition[6][3];
+extern bool FlagLegReady[6];
+//--------------------------------------------
 
 void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config);
 void digitalWrite(uint8_t port, uint8_t pin, bool value);
@@ -80,8 +91,8 @@ void I2C_burst_write(uint8_t device_address, uint8_t address, uint8_t n_data, ui
 void PCA9685_reset(uint8_t device_address);
 void PCA9685_init(uint8_t device_address);
 void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint16_t off);
-void SetServoAngle(uint8_t n, double angle);
-void SpeedControl_SetServoAngle(uint8_t n, double angle, uint8_t pause);
+void SetServoAngle(uint8_t ServoNum, double angle);
+void SpeedControl(uint8_t LegNum, uint8_t pause);
 //END OF PCA9685-------------------------------------------------------------------------------
 
 //TIMERS---------------------------------------------------------------------------------------
@@ -92,9 +103,8 @@ void SysTick_Handler(void);
 //END OF TIMERS-------------------------------------------------------------------------------
 
 //EXTERNAL INTERRUPTIONS----------------------------------------------------------------------
-
+//Interruptions for PPM 
 void EXTI0_IRQHandler(void);
-
 void EXTI0_init(void);
 //END OF EXTERNAL INTERRUPTIONS---------------------------------------------------------------
 

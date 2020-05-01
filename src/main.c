@@ -6,6 +6,8 @@ float Last_InputX, Last_InputY, Last_InputZ;
 float CoordX, CoordY, CoordZ;
 float Throttle, Pitch, Roll, Yaw, Switch;
 
+unsigned long NextTime = 100000;
+
 
 void Setup()
 {
@@ -45,13 +47,25 @@ void Setup()
     
    __enable_irq();
 
-   delay(100);
+   delay(1000);
    
 //   for (uint8_t ServoNum = 0; ServoNum < 18; ServoNum++)
 //    {
 //       SetServoAngle(ServoNum, 90);
 //    }
     
+   for (uint8_t i = 0; i < 6; i++)
+   {
+      for (uint8_t j = 0; j < 3; j++)
+      {
+         LocalTargetLegPosition[i][j] = 0;
+         LocalCurrentLegPosition[i][j] = 0;
+      }
+   }
+
+   MoveLeg(2, 60, 60, -50);
+
+   
    
    //led on
    digitalWrite(PORT_C, 13, 0);
@@ -181,35 +195,49 @@ int main()
       int delaypause = 1500;
 
       
-      for (int16_t Y = -25; Y < 25; Y++)
+//      for (int16_t Y = -25; Y < 25; Y++)
+//      {
+//         MoveLeg(0, 50, Y, -50);
+//         MoveLeg(1, 50, Y, -50);
+//         MoveLeg(2, 50, Y, -50);
+
+//         MoveLeg(3, -50, Y, -50);
+//         MoveLeg(4, -50, Y, -50);
+//         MoveLeg(5, -50, Y, -50);
+//         
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+
+//      for (int16_t Y = 25; Y > -25; Y--)
+//      {
+//         MoveLeg(0, 50, Y, -50);
+//         MoveLeg(1, 50, Y, -50);
+//         MoveLeg(2, 50, Y, -50);
+//         
+//         MoveLeg(3, -50, Y, -50);
+//         MoveLeg(4, -50, Y, -50);
+//         MoveLeg(5, -50, Y, -50);
+//         delay(pause);
+//      }
+
+//      delay(delaypause);
+
+      
+
+      if ((TimeFromStart + 10000) >= NextTime)
       {
-         MoveLeg(0, 50, Y, -50);
-         MoveLeg(1, 50, Y, -50);
-         MoveLeg(2, 50, Y, -50);
-
-         MoveLeg(3, -50, Y, -50);
-         MoveLeg(4, -50, Y, -50);
-         MoveLeg(5, -50, Y, -50);
+         SpeedControl(2, 10);
          
-         delay(pause);
-      }
-
-      delay(delaypause);
-
-      for (int16_t Y = 25; Y > -25; Y--)
-      {
-         MoveLeg(0, 50, Y, -50);
-         MoveLeg(1, 50, Y, -50);
-         MoveLeg(2, 50, Y, -50);
+         if(FlagLegReady[2] == false)
+         {
+            MoveLeg(2, LocalCurrentLegPosition[2][0], LocalCurrentLegPosition[2][1], LocalCurrentLegPosition[2][2]);
+         }
          
-         MoveLeg(3, -50, Y, -50);
-         MoveLeg(4, -50, Y, -50);
-         MoveLeg(5, -50, Y, -50);
-         delay(pause);
+         NextTime = TimeFromStart + 25000; //10 ms
       }
-
-      delay(delaypause);
-
+      
 
    }
 }
