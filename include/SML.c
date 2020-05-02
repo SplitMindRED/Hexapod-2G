@@ -22,6 +22,7 @@ uint16_t deltaInterruptionTime = 0;
 uint8_t ChannelCounter = 0;
 bool StartPackage = false;
 float Channel[6];
+float Vx = 0, Vy = 0, Vz = 0;
 
 uint16_t delay_count = 0;
 
@@ -39,17 +40,27 @@ double q0, q1, q2;
 //movements and trajectory variables
 uint8_t TrajectoryStep[6] = { 0, 0, 0, 0, 0, 0};
 //local trajectory for each leg [step][leg][xyz coord]
-int16_t LocalTrajectoryLeg2[4][3] = {
-//{x, y, z} Step
-	{60, 60, -50},
-	{60, 30, -50},
-	{60, 60, -35},
-	{60, 90, -50},
+
+int16_t LocalStartPoint[6][3] = {
+	 {X_OFFSET,       -Y_OFFSET,  -STARTHEIGHT},
+	 {X_OFFSET+30,    0,          -STARTHEIGHT},
+	 {X_OFFSET,       Y_OFFSET,   -STARTHEIGHT},
+	 {-X_OFFSET,      Y_OFFSET,   -STARTHEIGHT},
+	 {-X_OFFSET-30,   0,          -STARTHEIGHT},
+	 {-X_OFFSET,      -Y_OFFSET,  -STARTHEIGHT},
 };
 
 float LocalCurrentLegPosition[6][3];
 float LocalTargetLegPosition[6][3];
 bool FlagLegReady[6] = {1, 1, 1, 1, 1, 1};
+bool Phase[2] = { 0, 1 };
+
+float Diameter = DIAMETER;                   //60 mm aplitude in step
+
+float k = 0;
+float dH = DELTAHEIGHT;
+float H = STARTHEIGHT;
+
 //--------------------------------------------
 
 //set mode of pin of port. look to define for parameters
@@ -131,6 +142,18 @@ uint64_t pulseIN(uint8_t PIN)
 	delay(1);
 
 	return PulseLength;
+}
+
+float map(float Have, float HaveMin, float HaveMax, float NeedMin, float NeedMax)
+{
+	float Ratio = 0;
+   float Add = 0;
+   
+   Ratio = (NeedMax - NeedMin) / (HaveMax - HaveMin);
+   Add = NeedMax - (HaveMax * Ratio);
+	
+
+	return (Have * Ratio + Add);
 }
 
 //I2C----------------------------------------------------------------------------------------------------
@@ -294,10 +317,34 @@ void SetServoAngle(uint8_t ServoNum, double angle)
 	}	
 }
 
-uint8_t PhaseControl()
+bool PhaseControl(uint8_t GroupNum)
 {
-	
-	
+	float X, Y, Z;
+
+	if (GroupNum == 0)
+	{
+		X = LocalCurrentLegPosition[GroupNum + 2][0];
+		Y = LocalCurrentLegPosition[GroupNum + 2][1];
+		Z = LocalCurrentLegPosition[GroupNum + 2][2];
+
+		if ((X - X_OFFSET) * (X - X_OFFSET) + (Y - Y_OFFSET) * (Y - Y_OFFSET) >= ((Diameter / 2) * (Diameter / 2)))
+		{
+			Phase[GroupNum] = !Phase[GroupNum];
+		}
+	}
+	else if (GroupNum == 1)
+	{
+		X = LocalCurrentLegPosition[GroupNum + 2][0];
+		Y = LocalCurrentLegPosition[GroupNum + 2][1];
+		Z = LocalCurrentLegPosition[GroupNum + 2][2];
+
+		if ((X + X_OFFSET) * (X + X_OFFSET) + (Y - Y_OFFSET) * (Y - Y_OFFSET) >= ((Diameter / 2) * (Diameter / 2)))
+		{
+			Phase[GroupNum] = !Phase[GroupNum];
+		}
+	}
+
+	return Phase[GroupNum];
 }
 //END OF PCA9685-----------------------------------------------------------------------------------------
 
