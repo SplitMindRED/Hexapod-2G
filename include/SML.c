@@ -22,6 +22,7 @@ uint16_t deltaInterruptionTime = 0;
 uint8_t ChannelCounter = 0;
 bool StartPackage = false;
 float Channel[6];
+float Vx = 0, Vy = 0, Vz = 0;
 
 uint16_t delay_count = 0;
 
@@ -53,7 +54,8 @@ float LocalCurrentLegPosition[6][3];
 float LocalTargetLegPosition[6][3];
 bool FlagLegReady[6] = {1, 1, 1, 1, 1, 1};
 bool Phase[2] = { 0, 1 };
-int16_t Y_amplitude = 70;                   //60 mm aplitude in Y axis
+
+float Diameter = DIAMETER;                   //60 mm aplitude in step
 
 float k = 0;
 float dH = DELTAHEIGHT;
@@ -140,6 +142,18 @@ uint64_t pulseIN(uint8_t PIN)
 	delay(1);
 
 	return PulseLength;
+}
+
+float map(float Have, float HaveMin, float HaveMax, float NeedMin, float NeedMax)
+{
+	float Ratio = 0;
+   float Add = 0;
+   
+   Ratio = (NeedMax - NeedMin) / (HaveMax - HaveMin);
+   Add = NeedMax - (HaveMax * Ratio);
+	
+
+	return (Have * Ratio + Add);
 }
 
 //I2C----------------------------------------------------------------------------------------------------
@@ -305,10 +319,29 @@ void SetServoAngle(uint8_t ServoNum, double angle)
 
 bool PhaseControl(uint8_t GroupNum)
 {
-	if (LocalCurrentLegPosition[GroupNum][1] <= LocalStartPoint[GroupNum][1] - Y_amplitude / 2 ||
-		LocalCurrentLegPosition[GroupNum][1] >= LocalStartPoint[GroupNum][1] + Y_amplitude / 2)
+	float X, Y, Z;
+
+	if (GroupNum == 0)
 	{
-		Phase[GroupNum] = !Phase[GroupNum];
+		X = LocalCurrentLegPosition[GroupNum + 2][0];
+		Y = LocalCurrentLegPosition[GroupNum + 2][1];
+		Z = LocalCurrentLegPosition[GroupNum + 2][2];
+
+		if ((X - X_OFFSET) * (X - X_OFFSET) + (Y - Y_OFFSET) * (Y - Y_OFFSET) >= ((Diameter / 2) * (Diameter / 2)))
+		{
+			Phase[GroupNum] = !Phase[GroupNum];
+		}
+	}
+	else if (GroupNum == 1)
+	{
+		X = LocalCurrentLegPosition[GroupNum + 2][0];
+		Y = LocalCurrentLegPosition[GroupNum + 2][1];
+		Z = LocalCurrentLegPosition[GroupNum + 2][2];
+
+		if ((X + X_OFFSET) * (X + X_OFFSET) + (Y - Y_OFFSET) * (Y - Y_OFFSET) >= ((Diameter / 2) * (Diameter / 2)))
+		{
+			Phase[GroupNum] = !Phase[GroupNum];
+		}
 	}
 
 	return Phase[GroupNum];

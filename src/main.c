@@ -1,6 +1,5 @@
 #include "SML.h"
 
-float Vx, Vy, Vz;
 float InputX, InputY, InputZ;
 float Last_InputX, Last_InputY, Last_InputZ;
 float CoordX, CoordY, CoordZ;
@@ -63,9 +62,7 @@ void Setup()
    MoveLeg(2, LocalStartPoint[2][0], LocalStartPoint[2][1], LocalStartPoint[2][2]);
    MoveLeg(3, LocalStartPoint[3][0], LocalStartPoint[3][1], LocalStartPoint[3][2]);
    MoveLeg(4, LocalStartPoint[4][0], LocalStartPoint[4][1], LocalStartPoint[4][2]);
-   MoveLeg(5, LocalStartPoint[5][0], LocalStartPoint[5][1], LocalStartPoint[5][2]);
-
-   
+   MoveLeg(5, LocalStartPoint[5][0], LocalStartPoint[5][1], LocalStartPoint[5][2]);   
    
    //led on
    digitalWrite(PORT_C, 13, 0);
@@ -182,28 +179,41 @@ void FrontRightLeg_square()
    delay(delaypause);
 }
 
-int main()
+void HeightTest(float H)
 {
-   Setup();   
+   MoveLeg(0, LocalStartPoint[0][0], LocalStartPoint[0][1], -H);
+   MoveLeg(1, LocalStartPoint[1][0], LocalStartPoint[1][1], -H);
+   MoveLeg(2, LocalStartPoint[2][0], LocalStartPoint[2][1], -H);
+   MoveLeg(3, LocalStartPoint[3][0], LocalStartPoint[3][1], -H);
+   MoveLeg(4, LocalStartPoint[4][0], LocalStartPoint[4][1], -H);
+   MoveLeg(5, LocalStartPoint[5][0], LocalStartPoint[5][1], -H);
+}
 
-   //main loop
-   while (1)
+void HexapodMove()
+{
+   if ((TimeFromStart + 1000) >= NextTime)
    {
-      //FullServoTest(1);  
+      if (fabs(Vx) <= 20 && fabs(Vy) <= 20)
+      {
+         MoveLeg(0, LocalStartPoint[0][0], LocalStartPoint[0][1], -H);
+         MoveLeg(2, LocalStartPoint[2][0], LocalStartPoint[2][1], -H);
+         MoveLeg(4, LocalStartPoint[4][0], LocalStartPoint[4][1], -H);
+         Phase[0] = 0;
 
-      Vy = (Channel[1] * 0.8 - 880);
-      H = (Channel[2] * 0.07 + 8);
-      k = 4 * dH / (Y_amplitude * Y_amplitude);
-
-      if ((TimeFromStart + 1000) >= NextTime)
+         MoveLeg(1, LocalStartPoint[1][0], LocalStartPoint[1][1], -H);
+         MoveLeg(3, LocalStartPoint[3][0], LocalStartPoint[3][1], -H);
+         MoveLeg(5, LocalStartPoint[5][0], LocalStartPoint[5][1], -H);
+         Phase[1] = 1;
+      }
+      else
       {
          //group 0-------------------------------------------------------
          if (PhaseControl(0) == 0)
          {
             //X
-            Xt[0] = LocalCurrentLegPosition[0][0];
-            Xt[2] = LocalCurrentLegPosition[2][0];
-            Xt[4] = LocalCurrentLegPosition[4][0];
+            Xt[0] = LocalCurrentLegPosition[0][0] - Vx / 1000;
+            Xt[2] = LocalCurrentLegPosition[2][0] - Vx / 1000;
+            Xt[4] = LocalCurrentLegPosition[4][0] - Vx / 1000;
 
             //Y
             Yt[0] = LocalCurrentLegPosition[0][1] - Vy / 1000;
@@ -211,10 +221,6 @@ int main()
             Yt[4] = LocalCurrentLegPosition[4][1] - Vy / 1000;
 
             //Z
-//            Zt[0] = LocalCurrentLegPosition[0][2];
-//            Zt[2] = LocalCurrentLegPosition[2][2];
-//            Zt[4] = LocalCurrentLegPosition[4][2];
-            
             Zt[0] = -H;
             Zt[2] = -H;
             Zt[4] = -H;
@@ -226,9 +232,9 @@ int main()
          else
          {
             //X
-            Xt[0] = LocalCurrentLegPosition[0][0];
-            Xt[2] = LocalCurrentLegPosition[2][0];
-            Xt[4] = LocalCurrentLegPosition[4][0];
+            Xt[0] = LocalCurrentLegPosition[0][0] + Vx / 1000;
+            Xt[2] = LocalCurrentLegPosition[2][0] + Vx / 1000;
+            Xt[4] = LocalCurrentLegPosition[4][0] + Vx / 1000;
 
             //Y
             Yt[0] = LocalCurrentLegPosition[0][1] + Vy / 1000;
@@ -236,9 +242,10 @@ int main()
             Yt[4] = LocalCurrentLegPosition[4][1] + Vy / 1000;
 
             //Z
-            Zt[0] = -k * (Yt[0] + Y_OFFSET) * (Yt[0] + Y_OFFSET) - H + dH;
-            Zt[2] = -k * (Yt[2] - Y_OFFSET) * (Yt[2] - Y_OFFSET) - H + dH;
-            Zt[4] = -k * Yt[4] * Yt[4] - H + dH;
+            Zt[0] = -k * (Yt[0] + Y_OFFSET) * (Yt[0] + Y_OFFSET) - k * (Xt[0] - X_OFFSET) * (Xt[0] - X_OFFSET) - H + dH;
+            Zt[2] = -k * (Yt[2] - Y_OFFSET) * (Yt[2] - Y_OFFSET) - k * (Xt[2] - X_OFFSET) * (Xt[2] - X_OFFSET) - H + dH;
+            Zt[4] = -k * Yt[4] * Yt[4] - k * (Xt[4] + X_OFFSET + 30) * (Xt[4] + X_OFFSET + 30) - H + dH;
+
 
             MoveLeg(0, Xt[0], Yt[0], Zt[0]);
             MoveLeg(2, Xt[2], Yt[2], Zt[2]);
@@ -249,9 +256,9 @@ int main()
          if (PhaseControl(1) == 0)
          {
             //X
-            Xt[1] = LocalCurrentLegPosition[1][0];
-            Xt[3] = LocalCurrentLegPosition[3][0];
-            Xt[5] = LocalCurrentLegPosition[5][0];
+            Xt[1] = LocalCurrentLegPosition[1][0] - Vx / 1000;
+            Xt[3] = LocalCurrentLegPosition[3][0] - Vx / 1000;
+            Xt[5] = LocalCurrentLegPosition[5][0] - Vx / 1000;
 
             //Y
             Yt[1] = LocalCurrentLegPosition[1][1] - Vy / 1000;
@@ -259,10 +266,6 @@ int main()
             Yt[5] = LocalCurrentLegPosition[5][1] - Vy / 1000;
 
             //Z
-//            Zt[1] = LocalCurrentLegPosition[1][2];
-//            Zt[3] = LocalCurrentLegPosition[3][2];
-//            Zt[5] = LocalCurrentLegPosition[5][2];
-            
             Zt[1] = -H;
             Zt[3] = -H;
             Zt[5] = -H;
@@ -274,9 +277,9 @@ int main()
          else
          {
             //X
-            Xt[1] = LocalCurrentLegPosition[1][0];
-            Xt[3] = LocalCurrentLegPosition[3][0];
-            Xt[5] = LocalCurrentLegPosition[5][0];
+            Xt[1] = LocalCurrentLegPosition[1][0] + Vx / 1000;
+            Xt[3] = LocalCurrentLegPosition[3][0] + Vx / 1000;
+            Xt[5] = LocalCurrentLegPosition[5][0] + Vx / 1000;
 
             //Y
             Yt[1] = LocalCurrentLegPosition[1][1] + Vy / 1000;
@@ -284,16 +287,60 @@ int main()
             Yt[5] = LocalCurrentLegPosition[5][1] + Vy / 1000;
 
             //Z
-            Zt[1] = -k * Yt[1] * Yt[1] - H + dH;
-            Zt[3] = -k * (Yt[3] - Y_OFFSET) * (Yt[3] - Y_OFFSET) - H + dH;
-            Zt[5] = -k * (Yt[5] + Y_OFFSET) * (Yt[5] + Y_OFFSET) - H + dH;
+            Zt[1] = -k * Yt[1] * Yt[1] - k * (Xt[1] - X_OFFSET - 30)*(Xt[1] - X_OFFSET - 30) - H + dH;
+            Zt[3] = -k * (Yt[3] - Y_OFFSET) * (Yt[3] - Y_OFFSET) - k * (Xt[3] + X_OFFSET) * (Xt[3] + X_OFFSET) - H + dH;
+            Zt[5] = -k * (Yt[5] + Y_OFFSET) * (Yt[5] + Y_OFFSET) - k * (Xt[5] + X_OFFSET) * (Xt[5] + X_OFFSET) - H + dH;
 
             MoveLeg(1, Xt[1], Yt[1], Zt[1]);
             MoveLeg(3, Xt[3], Yt[3], Zt[3]);
             MoveLeg(5, Xt[5], Yt[5], Zt[5]);
          }
+      }     
 
-         NextTime = TimeFromStart + 1000; //1 ms
-      }      
+      NextTime = TimeFromStart + 1000; //1 ms
+   }
+}
+
+int main()
+{
+   Setup();   
+
+   //main loop
+   while (1)
+   {
+      //Vy = (Channel[1] * 0.8 - 880);
+      //H = (Channel[2] * 0.07 + 8);
+      Vx = map(Channel[0], 600, 1600, -1100, 1100);
+
+      if (fabs(Vx) < 20)
+      {
+         Vx == 0;         
+      }
+
+      Vy = map(Channel[1], 600, 1600, -1100, 1100);   
+
+      if (fabs(Vy) < 20)
+      {
+         Vy == 0;
+      }
+      
+      H = map(Channel[2], 600, 1600, 70, 120);
+
+      k = 4 * dH / (Diameter * Diameter);
+
+      //SWC switch mode
+      if (Channel[5] > 1300)                                //low
+      {
+         FullServoTest(1);         
+      }
+      else if (Channel[5] < 1200 && Channel[5] > 900)       //mid
+      {
+         HeightTest(H);
+      }
+      else if (Channel[5] < 700)                            //high
+      {
+         HexapodMove();
+      }   
+
    }
 }

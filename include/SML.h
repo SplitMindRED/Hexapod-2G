@@ -53,10 +53,11 @@
 #define PCA9685_ADDRESS_2           0x82
 
 //Hexapod parametres
-#define X_OFFSET                    40
-#define Y_OFFSET                    40
+#define X_OFFSET                    50
+#define Y_OFFSET                    50
 #define STARTHEIGHT                 70
-#define DELTAHEIGHT                 25
+#define DELTAHEIGHT                 30
+#define DIAMETER                    60
 
 extern unsigned long TimeFromStart;
 extern unsigned long CurrentInterruptionTime;
@@ -64,6 +65,7 @@ extern uint16_t deltaInterruptionTime;
 extern uint8_t ChannelCounter;
 extern bool StartPackage;
 extern float Channel[6];
+extern float Vx, Vy, Vz;
 
 extern uint16_t delay_count;
 
@@ -81,7 +83,8 @@ extern float LocalTargetLegPosition[6][3];
 extern int16_t LocalStartPoint[6][3];
 extern bool FlagLegReady[6];
 extern bool Phase[2];
-extern int16_t Y_amplitude;
+
+extern float Diameter;
 
 extern float k;
 extern float dH;
@@ -92,6 +95,7 @@ void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config);
 void digitalWrite(uint8_t port, uint8_t pin, bool value);
 void delay(int millisec);
 uint64_t pulseIN(uint8_t PIN);
+float map(float Have, float HaveMin, float HaveMax, float NeedMin, float NeedMax);
 
 //I2C------------------------------------------------------------------------------------------
 void I2C1_init(void);
