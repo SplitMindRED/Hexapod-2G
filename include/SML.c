@@ -1,32 +1,32 @@
 /***********************************************
-*SplitMind Library
-*Version 0.3
-*
-*WRITING BITs
-*a |= 1 << 7;					//set 1 in 7th bit
-*a &= ~(1 << 3);				//set 0 in 3th bit
-*a ^= 1 << 5;					//inversion of 5th bit
-*a |= 1 << 7 | 1 << 8		//sets 1 to 7th and 8th bits
-*
-*READING BITs
-*if( a & (1<<7) )				//if 7th bit in "a" var equals 1 -> true
-*a & ( 1 << 7 | 1 << 8 )	//checks 7th and 8th bits
+*	SplitMind Library
+*	Version 0.3
+*	
+*	WRITING BITs
+*	a |= 1 << 7;					//set 1 in 7th bit
+*	a &= ~(1 << 3);				//set 0 in 3th bit
+*	a ^= 1 << 5;					//inversion of 5th bit
+*	a |= 1 << 7 | 1 << 8		//sets 1 to 7th and 8th bits
+*	
+*	READING BITs
+*	if( a & (1<<7) )				//if 7th bit in "a" var equals 1 -> true
+*  a & ( 1 << 7 | 1 << 8 )	//checks 7th and 8th bits
 *
 ************************************************/
 
 #include "SML.h"
 
-unsigned long TimeFromStart = 0;
-unsigned long CurrentInterruptionTime = 0;
-uint16_t deltaInterruptionTime = 0;
-uint8_t ChannelCounter = 0;
-bool StartPackage = false;
-float Channel[6];
+unsigned long time_from_start = 0;
+unsigned long current_interruption_time = 0;
+uint16_t delta_interruption_time = 0;
+uint8_t channel_counter = 0;
+bool start_package = false;
+float channel[6];
 float Vx = 0, Vy = 0, Vz = 0;
 
 uint16_t delay_count = 0;
 
-bool ServoEnable = false;
+bool servo_enable = false;
 
 //geometry variables--------------------------
 const uint8_t OA = 37;
@@ -38,10 +38,11 @@ double q0, q1, q2;
 //--------------------------------------------
 
 //movements and trajectory variables
-uint8_t TrajectoryStep[6] = { 0, 0, 0, 0, 0, 0};
+uint8_t trajectory_step[6] = { 0, 0, 0, 0, 0, 0};
 //local trajectory for each leg [step][leg][xyz coord]
 
-int16_t LocalStartPoint[6][3] = {
+int16_t local_start_point[6][3] = 
+{
 	 {X_OFFSET,       -Y_OFFSET,  -STARTHEIGHT},
 	 {X_OFFSET+30,    0,          -STARTHEIGHT},
 	 {X_OFFSET,       Y_OFFSET,   -STARTHEIGHT},
@@ -50,12 +51,12 @@ int16_t LocalStartPoint[6][3] = {
 	 {-X_OFFSET,      -Y_OFFSET,  -STARTHEIGHT},
 };
 
-float LocalCurrentLegPosition[6][3];
-float LocalTargetLegPosition[6][3];
-bool FlagLegReady[6] = {1, 1, 1, 1, 1, 1};
-bool Phase[2] = { 0, 1 };
+float local_current_leg_position[6][3];
+float local_target_leg_position[6][3];
+bool flag_leg_ready[6] = {1, 1, 1, 1, 1, 1};
+bool phase[2] = { 0, 1 };
 
-float Diameter = DIAMETER;                   //60 mm aplitude in step
+float diameter = DIAMETER;                   //60 mm aplitude in step
 
 float k = 0;
 float dH = DELTAHEIGHT;
@@ -107,8 +108,8 @@ void digitalWrite(uint8_t port, uint8_t pin, bool value)
 //hard delay, empty cycle
 void delay(int millisec)
 {
-	unsigned long start_time = TimeFromStart;
-	while (TimeFromStart <= (start_time + (millisec * 1000)))
+	unsigned long start_time = time_from_start;
+	while (time_from_start <= (start_time + (millisec * 1000)))
 	{
 		//waiting
 	}
@@ -117,43 +118,43 @@ void delay(int millisec)
 //count pulse length and return
 uint64_t pulseIN(uint8_t PIN)
 {
-	uint16_t PulseLength = 0;
-	unsigned long StartCount = 0;
-	bool HIGHsignal = false;
+	uint16_t pulse_length = 0;
+	unsigned long start_count = 0;
+	bool high_signal = false;
 
 	while (1)
 	{
 		//when comes 1 -> start count
-		if (GPIOA->IDR & (1 << (PIN)) && HIGHsignal == false)
+		if (GPIOA->IDR & (1 << (PIN)) && high_signal == false)
 		{
-			StartCount = TimeFromStart;
-			HIGHsignal = true;
+			start_count = time_from_start;
+			high_signal = true;
 		}
 
 		//when comes 0 -> stop count and exit from cycle
-		if ((HIGHsignal == true) && !(GPIOA->IDR & (1 << (PIN))))
+		if ((high_signal == true) && !(GPIOA->IDR & (1 << (PIN))))
 		{
-			HIGHsignal = false;
-			PulseLength = TimeFromStart - StartCount;
+			high_signal = false;
+			pulse_length = time_from_start - start_count;
 			break;
 		}
 	}
 
 	delay(1);
 
-	return PulseLength;
+	return pulse_length;
 }
 
 float map(float Have, float HaveMin, float HaveMax, float NeedMin, float NeedMax)
 {
-	float Ratio = 0;
-   float Add = 0;
+	float ratio = 0;
+   float add = 0;
    
-   Ratio = (NeedMax - NeedMin) / (HaveMax - HaveMin);
-   Add = NeedMax - (HaveMax * Ratio);
+   ratio = (NeedMax - NeedMin) / (HaveMax - HaveMin);
+   add = NeedMax - (HaveMax * ratio);
 	
 
-	return (Have * Ratio + Add);
+	return (Have * ratio + add);
 }
 
 //I2C----------------------------------------------------------------------------------------------------
@@ -187,7 +188,7 @@ void I2C1_init(void)
 	I2C_Init(I2C1, &I2C_InitStructure);
 }
 
-void I2C_WriteByte(uint8_t device_address, uint8_t address, uint8_t data)
+void I2C_writeByte(uint8_t device_address, uint8_t address, uint8_t data)
 {
    uint32_t stop = 0;
 	//send START
@@ -218,7 +219,7 @@ void I2C_WriteByte(uint8_t device_address, uint8_t address, uint8_t data)
    }
 }
 
-void I2C_burst_write(uint8_t device_address, uint8_t address, uint8_t n_data, uint8_t* data)
+void I2C_burstWrite(uint8_t device_address, uint8_t address, uint8_t n_data, uint8_t* data)
 {
 	I2C_GenerateSTART(I2C1, ENABLE);
 	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));
@@ -247,7 +248,7 @@ void PCA9685_reset(uint8_t device_address)
 	//	uint8_t reset_data[2];
 	//	reset_data[0] = 0x00;
 	//	reset_data[1] = 0x06;
-	I2C_WriteByte(device_address, 0x00, 0x06);
+	I2C_writeByte(device_address, 0x00, 0x06);
 }
 
 void PCA9685_init(uint8_t device_address)
@@ -255,36 +256,36 @@ void PCA9685_init(uint8_t device_address)
 	PCA9685_reset(device_address);
 
 	//sleep
-	I2C_WriteByte(device_address, 0x00, 0b10000);
+	I2C_writeByte(device_address, 0x00, 0b10000);
 
 	//prescale
-	//I2C_WriteByte(0xFE, 0x3); MAX
-	I2C_WriteByte(device_address, 0xFE, 0x64); //60hz 
+	//I2C_writeByte(0xFE, 0x3); MAX
+	I2C_writeByte(device_address, 0xFE, 0x64); //60hz 
 
 	//normal mode
-	I2C_WriteByte(device_address, 0x00, 0xA1);
+	I2C_writeByte(device_address, 0x00, 0xA1);
 
 	//0 PWM
-	for (uint8_t ServoNum = 0; ServoNum < 18; ServoNum++)
+	for (uint8_t servo_num = 0; servo_num < 18; servo_num++)
 	{
-		//PCA9685_setPWM(PCA9685_ADDRESS_1, ServoNum, 0, 1);
+		//PCA9685_setPWM(PCA9685_ADDRESS_1, servo_num, 0, 1);
 	}
 	
 }
 
-void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint16_t off)
+void PCA9685_setPWM(uint8_t device_address, uint8_t servo_num, uint16_t on, uint16_t off)
 {
 	//uint8_t outputBuffer[4] = { on, (on >> 8), off, (off >> 8) };
 
-	//I2C_burst_write(0x06 + 4*ServoNum, 4, outputBuffer);
-	//I2C_WriteByte(0x06 + 4*ServoNum, on);
-	//I2C_WriteByte(0x06 + 4*ServoNum+1, on >> 8);
+	//I2C_burstWrite(0x06 + 4*servo_num, 4, outputBuffer);
+	//I2C_writeByte(0x06 + 4*servo_num, on);
+	//I2C_writeByte(0x06 + 4*servo_num+1, on >> 8);
 
-	I2C_WriteByte(device_address, 0x06 + 4 * ServoNum + 2, off);
-	I2C_WriteByte(device_address, 0x06 + 4 * ServoNum + 3, off >> 8);
+	I2C_writeByte(device_address, 0x06 + 4 * servo_num + 2, off);
+	I2C_writeByte(device_address, 0x06 + 4 * servo_num + 3, off >> 8);
 }
 
-void SetServoAngle(uint8_t ServoNum, double angle)
+void setServoAngle(uint8_t servo_num, double angle)
 {
    if(angle < 0)
    {
@@ -293,58 +294,50 @@ void SetServoAngle(uint8_t ServoNum, double angle)
 	double deg_to_pulse = 100 + (SERVOMAX - SERVOMIN) * angle / 180;
 	double deg_to_pulse_left = 100 + (SERVOMAX - SERVOMIN) * (180-angle) / 180;
 
-	if (ServoNum < 9)
+	if (servo_num < 9)
 	{
-        if(ServoNum == 2 || ServoNum == 5 || ServoNum == 8)
+        if(servo_num == 2 || servo_num == 5 || servo_num == 8)
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_1, ServoNum, 0, deg_to_pulse_left);
+            PCA9685_setPWM(PCA9685_ADDRESS_1, servo_num, 0, deg_to_pulse_left);
         }
         else
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_1, ServoNum, 0, deg_to_pulse);
+            PCA9685_setPWM(PCA9685_ADDRESS_1, servo_num, 0, deg_to_pulse);
         }		
 	}
 	else
 	{
-        if(ServoNum == 10 || ServoNum == 13 || ServoNum == 16)
+        if(servo_num == 10 || servo_num == 13 || servo_num == 16)
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_2, ServoNum -2, 0, deg_to_pulse_left);
+            PCA9685_setPWM(PCA9685_ADDRESS_2, servo_num -2, 0, deg_to_pulse_left);
         }
         else
         {
-            PCA9685_setPWM(PCA9685_ADDRESS_2, ServoNum -2, 0, deg_to_pulse);
+            PCA9685_setPWM(PCA9685_ADDRESS_2, servo_num -2, 0, deg_to_pulse);
         }		
 	}	
 }
 
-bool PhaseControl(uint8_t GroupNum)
+bool phaseControl(uint8_t group_num)
 {
 	float X, Y, Z;
+	float x, y, r;
 
-	if (GroupNum == 0)
+	X = local_current_leg_position[group_num + 2][0];
+	Y = local_current_leg_position[group_num + 2][1];
+	Z = local_current_leg_position[group_num + 2][2];
+
+	//parameters in circle formula (x+x0)^2 + (y+y0)^2 = r^2
+	x = X - X_OFFSET + (2 * group_num * X_OFFSET);	//short form. if gropu=0 -> -X_OFFSET, if group = 1 -> +X_OFFSET
+	y = Y - Y_OFFSET;
+	r = diameter / 2;
+
+	if (x*x + y*y >= r*r)
 	{
-		X = LocalCurrentLegPosition[GroupNum + 2][0];
-		Y = LocalCurrentLegPosition[GroupNum + 2][1];
-		Z = LocalCurrentLegPosition[GroupNum + 2][2];
-
-		if ((X - X_OFFSET) * (X - X_OFFSET) + (Y - Y_OFFSET) * (Y - Y_OFFSET) >= ((Diameter / 2) * (Diameter / 2)))
-		{
-			Phase[GroupNum] = !Phase[GroupNum];
-		}
-	}
-	else if (GroupNum == 1)
-	{
-		X = LocalCurrentLegPosition[GroupNum + 2][0];
-		Y = LocalCurrentLegPosition[GroupNum + 2][1];
-		Z = LocalCurrentLegPosition[GroupNum + 2][2];
-
-		if ((X + X_OFFSET) * (X + X_OFFSET) + (Y - Y_OFFSET) * (Y - Y_OFFSET) >= ((Diameter / 2) * (Diameter / 2)))
-		{
-			Phase[GroupNum] = !Phase[GroupNum];
-		}
+		phase[group_num] = !phase[group_num];
 	}
 
-	return Phase[GroupNum];
+	return phase[group_num];
 }
 //END OF PCA9685-----------------------------------------------------------------------------------------
 
@@ -381,7 +374,7 @@ void SysTick_Handler(void)
 {
 	//increments every 1 microsec
 
-	TimeFromStart++;
+	time_from_start++;
 }
 //END OF TIMERS------------------------------------------------------------------------------------------
 
@@ -389,54 +382,54 @@ void SysTick_Handler(void)
 //Interruptions for PPM 
 void EXTI0_IRQHandler(void)
 {
-	//reset interruption flag
-	EXTI->PR = EXTI_PR_PR0;
-
 	//if FRONT
 	if (GPIOA->IDR & 1)
 	{
 		//get time
-		CurrentInterruptionTime = TimeFromStart;
+		current_interruption_time = time_from_start;
 	}
 	else
 	{
 		//if END -> evaluate delta
-		deltaInterruptionTime = TimeFromStart - CurrentInterruptionTime;
+		delta_interruption_time = time_from_start - current_interruption_time;
 
 		//if we have found start of package after 9100 mcs
-		if (StartPackage == true)
+		if (start_package == true)
 		{
 			//consistently store channel values to array 
-			Channel[ChannelCounter] = deltaInterruptionTime;
-			ChannelCounter++;
-			if (ChannelCounter == 6)
+			channel[channel_counter] = delta_interruption_time;
+			channel_counter++;
+			if (channel_counter == 6)
 			{
 				//when package is fully gathered
-				StartPackage = false;
+				start_package = false;
 			}
-			else if (ChannelCounter == 5)
+			else if (channel_counter == 5)
 			{
 				//for emergency stop check 4 channel with new value
-				if (Channel[4] > 1100)
+				if (channel[4] > 1100)
 				{
-					ServoEnable = 0;
+					servo_enable = 0;
 					
 				}
 				else
 				{
-					ServoEnable = 1;
+					servo_enable = 1;
 				}
-				digitalWrite(PORT_A, 12, ServoEnable); //1-off 0-on     
-				digitalWrite(PORT_C, 13, ServoEnable); //1-led off, 0-led on				
+				digitalWrite(PORT_A, 12, servo_enable); //1-off 0-on     
+				digitalWrite(PORT_C, 13, servo_enable); //1-led off, 0-led on				
 			}
 		}
-		else if (deltaInterruptionTime > 5000)
+		else if (delta_interruption_time > 5000)
 		{
 			//if long HIGH level detected -> we found start of the package
-			StartPackage = true;
-			ChannelCounter = 0;
+			start_package = true;
+			channel_counter = 0;
 		}
 	}
+
+	//reset interruption flag
+	EXTI->PR = EXTI_PR_PR0;
 }
 
 void EXTI0_init(void)
@@ -468,7 +461,7 @@ void EXTI0_init(void)
 //END OF EXTERNAL INTERRUPTIONS--------------------------------------------------------------------------
 
 //HEXAPOD MOVEMENTS--------------------------------------------------------------------------------------
-void FindAngles(uint8_t LegNum, double x, double y, double z)
+void findAngles(uint8_t leg_num, double x, double y, double z)
 {
 	double p = sqrt( x*x + y*y );
 	double OC = sqrt( p*p + z*z );
@@ -484,7 +477,7 @@ void FindAngles(uint8_t LegNum, double x, double y, double z)
 	else
 	{
 		//right side
-		if (LegNum <= 2)
+		if (leg_num <= 2)
 		{
 			q0rad = atan2(y, x);
 		}
@@ -495,7 +488,7 @@ void FindAngles(uint8_t LegNum, double x, double y, double z)
 		}
 	}
 
-	switch (LegNum)
+	switch (leg_num)
 	{
 	case 0:
 		q0 = q0rad * 180 / pi + 135;		//back right
@@ -536,16 +529,16 @@ void FindAngles(uint8_t LegNum, double x, double y, double z)
 	q2 = q2rad * 180 / pi;
 }
 
-void MoveLeg(uint8_t LegNum, double x, double y, double z)
+void moveLeg(uint8_t leg_num, double x, double y, double z)
 {
-	FindAngles(LegNum, x, y, z);
+	findAngles(leg_num, x, y, z);
 
-	SetServoAngle(LegNum * 3, q0);
-	SetServoAngle(LegNum * 3 + 1, q1);
-	SetServoAngle(LegNum * 3 + 2, q2);
+	setServoAngle(leg_num * 3, q0);
+	setServoAngle(leg_num * 3 + 1, q1);
+	setServoAngle(leg_num * 3 + 2, q2);
 
-	LocalCurrentLegPosition[LegNum][0] = x;
-	LocalCurrentLegPosition[LegNum][1] = y;
-	LocalCurrentLegPosition[LegNum][2] = z;
+	local_current_leg_position[leg_num][0] = x;
+	local_current_leg_position[leg_num][1] = y;
+	local_current_leg_position[leg_num][2] = z;
 }
 //END OF HEXAPOD MOVEMENTS-------------------------------------------------------------------------------

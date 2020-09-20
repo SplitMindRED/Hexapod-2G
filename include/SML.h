@@ -1,6 +1,6 @@
 /***********************************************
-*SplitMind Library
-*Version 0.3
+*  SplitMind Library
+*  Version 0.3
 ************************************************/
 #include "stm32f10x.h"                  // Device header
 #include "stm32f10x_rcc.h"              // Keil::Device:StdPeriph Drivers:RCC
@@ -10,7 +10,7 @@
 #include "stm32f10x_tim.h"              // Keil::Device:StdPeriph Drivers:TIM
 #include "stdbool.h"
 #include "math.h"
-#include <stdint.h>
+#include "stdint.h"
 
 //DEFINE PORT LETTER
 #define PORT_A				            (2)
@@ -53,38 +53,44 @@
 #define PCA9685_ADDRESS_2           0x82
 
 //Hexapod parametres
+//offset from (0, 0) on XY plane in every local coordinate system of leg
 #define X_OFFSET                    50
 #define Y_OFFSET                    50
+
 #define STARTHEIGHT                 70
+
+//height of step
 #define DELTAHEIGHT                 30
+
+//diameter of step circle. distance of step
 #define DIAMETER                    60
 
-extern unsigned long TimeFromStart;
-extern unsigned long CurrentInterruptionTime;
-extern uint16_t deltaInterruptionTime;
-extern uint8_t ChannelCounter;
-extern bool StartPackage;
-extern float Channel[6];
+extern unsigned long time_from_start;
+extern unsigned long current_interruption_time;
+extern uint16_t delta_interruption_time;
+extern uint8_t channel_counter;
+extern bool start_package;
+extern float channel[6];
 extern float Vx, Vy, Vz;
 
 extern uint16_t delay_count;
 
-extern bool ServoEnable;
+extern bool servo_enable;
 
 //servo angles--------------------------
 extern double q0, q1, q2;
 //--------------------------------------
 
 //movements and trajectory variables
-extern uint8_t TrajectoryStep[6];
+extern uint8_t trajectory_step[6];
 //local trajectory for each leg [step][xyz coord]
-extern float LocalCurrentLegPosition[6][3];
-extern float LocalTargetLegPosition[6][3];
-extern int16_t LocalStartPoint[6][3];
-extern bool FlagLegReady[6];
-extern bool Phase[2];
+extern float local_current_leg_position[6][3];
+extern float local_target_leg_position[6][3];
+extern int16_t local_start_point[6][3];
+extern bool flag_leg_ready[6];
+extern bool phase[2];
 
-extern float Diameter;
+extern float diameter;
 
 extern float k;
 extern float dH;
@@ -99,16 +105,16 @@ float map(float Have, float HaveMin, float HaveMax, float NeedMin, float NeedMax
 
 //I2C------------------------------------------------------------------------------------------
 void I2C1_init(void);
-void I2C_WriteByte(uint8_t device_address, uint8_t address, uint8_t data);
-void I2C_burst_write(uint8_t device_address, uint8_t address, uint8_t n_data, uint8_t* data);
+void I2C_writeByte(uint8_t device_address, uint8_t address, uint8_t data);
+void I2C_burstWrite(uint8_t device_address, uint8_t address, uint8_t n_data, uint8_t* data);
 //END OF I2C-----------------------------------------------------------------------------------
 
 //PCA9685--------------------------------------------------------------------------------------
 void PCA9685_reset(uint8_t device_address);
 void PCA9685_init(uint8_t device_address);
 void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint16_t off);
-void SetServoAngle(uint8_t ServoNum, double angle);
-bool PhaseControl(uint8_t GroupNum);
+void setServoAngle(uint8_t ServoNum, double angle);
+bool phaseControl(uint8_t GroupNum);
 //END OF PCA9685-------------------------------------------------------------------------------
 
 //TIMERS---------------------------------------------------------------------------------------
@@ -126,7 +132,7 @@ void EXTI0_init(void);
 
 
 //HEXAPOD MOVEMENTS---------------------------------------------------------------------------
-void FindAngles(uint8_t LegNum, double x, double y, double z);
+void findAngles(uint8_t LegNum, double x, double y, double z);
 
-void MoveLeg(uint8_t LegNum, double x, double y, double z);
+void moveLeg(uint8_t LegNum, double x, double y, double z);
 //END OF HEXAPOD MOVEMENTS--------------------------------------------------------------------
