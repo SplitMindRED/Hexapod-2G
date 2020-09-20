@@ -1,6 +1,6 @@
 /***********************************************
 *	SplitMind Library
-*	Version 0.3
+*	Version 0.4
 *	
 *	WRITING BITs
 *	a |= 1 << 7;					//set 1 in 7th bit

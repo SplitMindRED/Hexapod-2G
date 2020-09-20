@@ -1,6 +1,6 @@
 /***********************************************
 *  SplitMind Library
-*  Version 0.3
+*  Version 0.4
 ************************************************/
 #include "stm32f10x.h"                  // Device header
 #include "stm32f10x_rcc.h"              // Keil::Device:StdPeriph Drivers:RCC
