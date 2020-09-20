@@ -62,6 +62,9 @@ float k = 0;
 float dH = DELTAHEIGHT;
 float H = STARTHEIGHT;
 
+float Xt[6], Yt[6], Zt[6];
+
+unsigned long next_time = 1000;
 //--------------------------------------------
 
 //set mode of pin of port. look to define for parameters
@@ -145,16 +148,16 @@ uint64_t pulseIN(uint8_t PIN)
 	return pulse_length;
 }
 
-float map(float Have, float HaveMin, float HaveMax, float NeedMin, float NeedMax)
+float map(float have, float have_min, float have_max, float need_min, float need_max)
 {
 	float ratio = 0;
    float add = 0;
    
-   ratio = (NeedMax - NeedMin) / (HaveMax - HaveMin);
-   add = NeedMax - (HaveMax * ratio);
+   ratio = (need_max - need_min) / (have_max - have_min);
+   add = need_max - (have_max * ratio);
 	
 
-	return (Have * ratio + add);
+	return (have * ratio + add);
 }
 
 //I2C----------------------------------------------------------------------------------------------------
@@ -275,12 +278,6 @@ void PCA9685_init(uint8_t device_address)
 
 void PCA9685_setPWM(uint8_t device_address, uint8_t servo_num, uint16_t on, uint16_t off)
 {
-	//uint8_t outputBuffer[4] = { on, (on >> 8), off, (off >> 8) };
-
-	//I2C_burstWrite(0x06 + 4*servo_num, 4, outputBuffer);
-	//I2C_writeByte(0x06 + 4*servo_num, on);
-	//I2C_writeByte(0x06 + 4*servo_num+1, on >> 8);
-
 	I2C_writeByte(device_address, 0x06 + 4 * servo_num + 2, off);
 	I2C_writeByte(device_address, 0x06 + 4 * servo_num + 3, off >> 8);
 }
@@ -373,7 +370,6 @@ void TIM3_IRQHandler(void)
 void SysTick_Handler(void)
 {
 	//increments every 1 microsec
-
 	time_from_start++;
 }
 //END OF TIMERS------------------------------------------------------------------------------------------

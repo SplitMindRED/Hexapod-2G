@@ -95,13 +95,19 @@ extern float diameter;
 extern float k;
 extern float dH;
 extern float H;
+
+//x(t) function
+extern float Xt[6], Yt[6], Zt[6];
+
+extern unsigned long next_time;
+
 //--------------------------------------------
 
 void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config);
 void digitalWrite(uint8_t port, uint8_t pin, bool value);
 void delay(int millisec);
 uint64_t pulseIN(uint8_t PIN);
-float map(float Have, float HaveMin, float HaveMax, float NeedMin, float NeedMax);
+float map(float have, float have_min, float have_max, float need_min, float need_max);
 
 //I2C------------------------------------------------------------------------------------------
 void I2C1_init(void);
@@ -112,8 +118,8 @@ void I2C_burstWrite(uint8_t device_address, uint8_t address, uint8_t n_data, uin
 //PCA9685--------------------------------------------------------------------------------------
 void PCA9685_reset(uint8_t device_address);
 void PCA9685_init(uint8_t device_address);
-void PCA9685_setPWM(uint8_t device_address, uint8_t ServoNum, uint16_t on, uint16_t off);
-void setServoAngle(uint8_t ServoNum, double angle);
+void PCA9685_setPWM(uint8_t device_address, uint8_t servo_num, uint16_t on, uint16_t off);
+void setServoAngle(uint8_t servo_num, double angle);
 bool phaseControl(uint8_t GroupNum);
 //END OF PCA9685-------------------------------------------------------------------------------
 
@@ -132,7 +138,7 @@ void EXTI0_init(void);
 
 
 //HEXAPOD MOVEMENTS---------------------------------------------------------------------------
-void findAngles(uint8_t LegNum, double x, double y, double z);
+void findAngles(uint8_t leg_num, double x, double y, double z);
 
-void moveLeg(uint8_t LegNum, double x, double y, double z);
+void moveLeg(uint8_t leg_num, double x, double y, double z);
 //END OF HEXAPOD MOVEMENTS--------------------------------------------------------------------

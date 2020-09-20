@@ -1,14 +1,5 @@
 #include "SML.h"
 
-float InputX, InputY, InputZ;
-float Last_InputX, Last_InputY, Last_InputZ;
-float CoordX, CoordY, CoordZ;
-float Throttle, Pitch, Roll, Yaw, Switch;
-//x(t) function
-float Xt[6], Yt[6], Zt[6];
-
-unsigned long next_time = 1000;
-
 void setup()
 {	
     //SETUP SYSTICK TIMER
