@@ -31,7 +31,7 @@ void setup()
     
    __enable_irq();
 
-   delay(1000);
+   delay(1000);   
        
    for (uint8_t i = 0; i < 6; i++)
    {
@@ -144,77 +144,126 @@ void hexapodMove()
          if (phaseControl(0) == 0)
          {
             //X
-            Xt[0] = local_current_leg_position[0][0] - Vx / 1000;
-            Xt[2] = local_current_leg_position[2][0] - Vx / 1000;
-            Xt[4] = local_current_leg_position[4][0] - Vx / 1000;
+            //Xt[0] = local_current_leg_position[0][0] - Vx / 1000;
+            //Xt[2] = local_current_leg_position[2][0] - Vx / 1000;
+            //Xt[4] = local_current_leg_position[4][0] - Vx / 1000;
+
+            Leg[0].Xt = Leg[0].current_x - Vx / 1000;
+            Leg[2].Xt = Leg[2].current_x - Vx / 1000;
+            Leg[4].Xt = Leg[4].current_x - Vx / 1000;
 
             //Y
-            Yt[0] = local_current_leg_position[0][1] - Vy / 1000;
-            Yt[2] = local_current_leg_position[2][1] - Vy / 1000;
-            Yt[4] = local_current_leg_position[4][1] - Vy / 1000;
+            //Yt[0] = local_current_leg_position[0][1] - Vy / 1000;
+            //Yt[2] = local_current_leg_position[2][1] - Vy / 1000;
+            //Yt[4] = local_current_leg_position[4][1] - Vy / 1000;
+
+            Leg[0].Yt = Leg[0].current_y - Vy / 1000;
+            Leg[2].Yt = Leg[2].current_y - Vy / 1000;
+            Leg[4].Yt = Leg[4].current_y - Vy / 1000;
 
             //Z
-            Zt[0] = -H;
-            Zt[2] = -H;
-            Zt[4] = -H;
+            //Zt[0] = -H;
+            //Zt[2] = -H;
+            //Zt[4] = -H;
+
+            Leg[0].Zt = -H;
+            Leg[2].Zt = -H;
+            Leg[4].Zt = -H;
          }
          else
          {
             //X
-            Xt[0] = local_current_leg_position[0][0] + Vx / 1000;
-            Xt[2] = local_current_leg_position[2][0] + Vx / 1000;
-            Xt[4] = local_current_leg_position[4][0] + Vx / 1000;
+            //Xt[0] = local_current_leg_position[0][0] + Vx / 1000;
+            //Xt[2] = local_current_leg_position[2][0] + Vx / 1000;
+            //Xt[4] = local_current_leg_position[4][0] + Vx / 1000;
+
+            Leg[0].Xt = Leg[0].current_x + Vx / 1000;
+            Leg[2].Xt = Leg[2].current_x + Vx / 1000;
+            Leg[4].Xt = Leg[4].current_x + Vx / 1000;
 
             //Y
-            Yt[0] = local_current_leg_position[0][1] + Vy / 1000;
-            Yt[2] = local_current_leg_position[2][1] + Vy / 1000;
-            Yt[4] = local_current_leg_position[4][1] + Vy / 1000;
+            //Yt[0] = local_current_leg_position[0][1] + Vy / 1000;
+            //Yt[2] = local_current_leg_position[2][1] + Vy / 1000;
+            //Yt[4] = local_current_leg_position[4][1] + Vy / 1000;
+
+            Leg[0].Yt = Leg[0].current_y + Vy / 1000;
+            Leg[2].Yt = Leg[2].current_y + Vy / 1000;
+            Leg[4].Yt = Leg[4].current_y + Vy / 1000;
 
             //Z
-            Zt[0] = -k * (Yt[0] + Y_OFFSET) * (Yt[0] + Y_OFFSET) - k * (Xt[0] - X_OFFSET) * (Xt[0] - X_OFFSET) - H + dH;
-            Zt[2] = -k * (Yt[2] - Y_OFFSET) * (Yt[2] - Y_OFFSET) - k * (Xt[2] - X_OFFSET) * (Xt[2] - X_OFFSET) - H + dH;
-            Zt[4] = -k * Yt[4] * Yt[4] - k * (Xt[4] + X_OFFSET + 30) * (Xt[4] + X_OFFSET + 30) - H + dH;
+            //Zt[0] = -k * (Yt[0] + Y_OFFSET) * (Yt[0] + Y_OFFSET) - k * (Xt[0] - X_OFFSET) * (Xt[0] - X_OFFSET) - H + dH;
+            //Zt[2] = -k * (Yt[2] - Y_OFFSET) * (Yt[2] - Y_OFFSET) - k * (Xt[2] - X_OFFSET) * (Xt[2] - X_OFFSET) - H + dH;
+            //Zt[4] = -k * Yt[4] * Yt[4] - k * (Xt[4] + X_OFFSET + 30) * (Xt[4] + X_OFFSET + 30) - H + dH;
+
+            Leg[0].Zt = -k * (Leg[0].Yt + Y_OFFSET) * (Leg[0].Yt + Y_OFFSET) - k * (Leg[0].Xt - X_OFFSET) * (Leg[0].Xt - X_OFFSET) - H + dH;
+            Leg[2].Zt = -k * (Leg[2].Yt - Y_OFFSET) * (Leg[2].Yt - Y_OFFSET) - k * (Leg[2].Xt - X_OFFSET) * (Leg[2].Xt - X_OFFSET) - H + dH;
+            Leg[4].Zt = -k * Leg[4].Yt * Leg[4].Yt - k * (Leg[4].Xt + X_OFFSET + 30) * (Leg[4].Xt + X_OFFSET + 30) - H + dH;
          }
 
          //group 1---------------------------------------------------
          if (phaseControl(1) == 0)
          {
             //X
-            Xt[1] = local_current_leg_position[1][0] - Vx / 1000;
-            Xt[3] = local_current_leg_position[3][0] - Vx / 1000;
-            Xt[5] = local_current_leg_position[5][0] - Vx / 1000;
+            //Xt[1] = local_current_leg_position[1][0] - Vx / 1000;
+            //Xt[3] = local_current_leg_position[3][0] - Vx / 1000;
+            //Xt[5] = local_current_leg_position[5][0] - Vx / 1000;
+
+            Leg[1].Xt = Leg[1].current_x - Vx / 1000;
+            Leg[3].Xt = Leg[3].current_x - Vx / 1000;
+            Leg[5].Xt = Leg[5].current_x - Vx / 1000;
 
             //Y
-            Yt[1] = local_current_leg_position[1][1] - Vy / 1000;
-            Yt[3] = local_current_leg_position[3][1] - Vy / 1000;
-            Yt[5] = local_current_leg_position[5][1] - Vy / 1000;
+            //Yt[1] = local_current_leg_position[1][1] - Vy / 1000;
+            //Yt[3] = local_current_leg_position[3][1] - Vy / 1000;
+            //Yt[5] = local_current_leg_position[5][1] - Vy / 1000;
+
+            Leg[1].Yt = Leg[1].current_y - Vy / 1000;
+            Leg[3].Yt = Leg[3].current_y - Vy / 1000;
+            Leg[5].Yt = Leg[5].current_y - Vy / 1000;
+
 
             //Z
-            Zt[1] = -H;
-            Zt[3] = -H;
-            Zt[5] = -H;
+            //Zt[1] = -H;
+            //Zt[3] = -H;
+            //Zt[5] = -H;
+
+            Leg[1].Zt = -H;
+            Leg[3].Zt = -H;
+            Leg[5].Zt = -H;
          }
          else
          {
             //X
-            Xt[1] = local_current_leg_position[1][0] + Vx / 1000;
-            Xt[3] = local_current_leg_position[3][0] + Vx / 1000;
-            Xt[5] = local_current_leg_position[5][0] + Vx / 1000;
+            //Xt[1] = local_current_leg_position[1][0] + Vx / 1000;
+            //Xt[3] = local_current_leg_position[3][0] + Vx / 1000;
+            //Xt[5] = local_current_leg_position[5][0] + Vx / 1000;
+
+            Leg[1].Xt = Leg[1].current_x + Vx / 1000;
+            Leg[3].Xt = Leg[3].current_x + Vx / 1000;
+            Leg[5].Xt = Leg[5].current_x + Vx / 1000;
 
             //Y
-            Yt[1] = local_current_leg_position[1][1] + Vy / 1000;
-            Yt[3] = local_current_leg_position[3][1] + Vy / 1000;
-            Yt[5] = local_current_leg_position[5][1] + Vy / 1000;
+            //Yt[1] = local_current_leg_position[1][1] + Vy / 1000;
+            //Yt[3] = local_current_leg_position[3][1] + Vy / 1000;
+            //Yt[5] = local_current_leg_position[5][1] + Vy / 1000;
+
+            Leg[1].Yt = Leg[1].current_y + Vy / 1000;
+            Leg[3].Yt = Leg[3].current_y + Vy / 1000;
+            Leg[5].Yt = Leg[5].current_y + Vy / 1000;
 
             //Z
-            Zt[1] = -k * Yt[1] * Yt[1] - k * (Xt[1] - X_OFFSET - 30)*(Xt[1] - X_OFFSET - 30) - H + dH;
-            Zt[3] = -k * (Yt[3] - Y_OFFSET) * (Yt[3] - Y_OFFSET) - k * (Xt[3] + X_OFFSET) * (Xt[3] + X_OFFSET) - H + dH;
-            Zt[5] = -k * (Yt[5] + Y_OFFSET) * (Yt[5] + Y_OFFSET) - k * (Xt[5] + X_OFFSET) * (Xt[5] + X_OFFSET) - H + dH;        
+            //Zt[1] = -k * Yt[1] * Yt[1] - k * (Xt[1] - X_OFFSET - 30)*(Xt[1] - X_OFFSET - 30) - H + dH;
+            //Zt[3] = -k * (Yt[3] - Y_OFFSET) * (Yt[3] - Y_OFFSET) - k * (Xt[3] + X_OFFSET) * (Xt[3] + X_OFFSET) - H + dH;
+            //Zt[5] = -k * (Yt[5] + Y_OFFSET) * (Yt[5] + Y_OFFSET) - k * (Xt[5] + X_OFFSET) * (Xt[5] + X_OFFSET) - H + dH;        
+
+            Leg[1].Zt = -k * (Leg[1].Yt + Y_OFFSET) * (Leg[1].Yt + Y_OFFSET) - k * (Leg[1].Xt - X_OFFSET) * (Leg[1].Xt - X_OFFSET) - H + dH;
+            Leg[3].Zt = -k * (Leg[3].Yt - Y_OFFSET) * (Leg[3].Yt - Y_OFFSET) - k * (Leg[3].Xt - X_OFFSET) * (Leg[3].Xt - X_OFFSET) - H + dH;
+            Leg[5].Zt = -k * Leg[5].Yt * Leg[5].Yt - k * (Leg[5].Xt + X_OFFSET + 30) * (Leg[5].Xt + X_OFFSET + 30) - H + dH;
          }
 
          for (uint8_t i = 0; i < 6; i++)
          {
-            moveLeg(i, Xt[i], Yt[i], Zt[i]);
+            moveLeg(i, Leg[i].Xt, Leg[i].Yt, Leg[i].Zt);
          }
       }     
 

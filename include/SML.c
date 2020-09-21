@@ -67,6 +67,8 @@ float H = STARTHEIGHT;
 float Xt[6], Yt[6], Zt[6];
 
 unsigned long next_time = 1000;
+
+struct Legs Leg[6];
 //--------------------------------------------
 
 //set mode of pin of port. look to define for parameters
@@ -322,9 +324,13 @@ bool phaseControl(uint8_t group_num)
 	float X, Y, Z;
 	float x, y, r;
 
-	X = local_current_leg_position[group_num + 2][0];
-	Y = local_current_leg_position[group_num + 2][1];
-	Z = local_current_leg_position[group_num + 2][2];
+	//X = local_current_leg_position[group_num + 2][0];
+	//Y = local_current_leg_position[group_num + 2][1];
+	//Z = local_current_leg_position[group_num + 2][2];
+
+	X = Leg[group_num + 2].current_x;
+	Z = Leg[group_num + 2].current_y;
+	Y = Leg[group_num + 2].current_z;
 
 	//parameters in circle formula (x+x0)^2 + (y+y0)^2 = r^2
 	x = X - X_OFFSET + (2 * group_num * X_OFFSET);	//short form. if gropu=0 -> -X_OFFSET, if group = 1 -> +X_OFFSET
@@ -535,8 +541,12 @@ void moveLeg(uint8_t leg_num, double x, double y, double z)
 	setServoAngle(leg_num * 3 + 1, q1);
 	setServoAngle(leg_num * 3 + 2, q2);
 
-	local_current_leg_position[leg_num][0] = x;
-	local_current_leg_position[leg_num][1] = y;
-	local_current_leg_position[leg_num][2] = z;
+	//local_current_leg_position[leg_num][0] = x;
+	//local_current_leg_position[leg_num][1] = y;
+	//local_current_leg_position[leg_num][2] = z;
+
+	Leg[leg_num].current_x = x;
+	Leg[leg_num].current_y = y;
+	Leg[leg_num].current_z = z;
 }
 //END OF HEXAPOD MOVEMENTS-------------------------------------------------------------------------------

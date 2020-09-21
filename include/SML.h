@@ -103,6 +103,24 @@ extern float Xt[6], Yt[6], Zt[6];
 
 extern unsigned long next_time;
 
+extern struct Legs
+{
+   //f(t) coordinates functions
+   float Xt, Yt, Zt;
+
+   //current local position of leg (x, y, z)
+   float current_x;
+   float current_y;
+   float current_z;
+
+   //new local position of leg (x, y, z)
+   float target_x;
+   float target_y;
+   float target_z;
+
+
+} Leg[6];
+
 //--------------------------------------------
 
 void pinMode(uint8_t port, uint8_t pin, uint8_t mode, uint8_t config);
