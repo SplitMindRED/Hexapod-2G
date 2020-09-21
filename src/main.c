@@ -67,6 +67,61 @@ void heightTest(float H)
    }
 }
 
+void rotateBody()
+{
+   //leg tips's coordinates in central CS (coordinate system)
+   float current_leg_position[6][3];
+   float p_base_new[6][3];
+   float p_delta[6][3];
+   float p_new[6][3];
+   float delta_roll = 0;
+
+   delta_roll = input_roll - current_roll;
+
+   //right middle leg
+   //X
+   current_leg_position[1][0] = local_current_leg_position[1][0] + 64.5;
+   //Y
+   current_leg_position[1][1] = local_current_leg_position[1][1];
+   //Z
+   current_leg_position[1][2] = local_current_leg_position[1][2];
+
+   //left middle leg
+   //X
+   current_leg_position[4][0] = local_current_leg_position[4][0] - 64.5;
+   //Y
+   current_leg_position[4][1] = local_current_leg_position[4][1];
+   //Z
+   current_leg_position[4][2] = local_current_leg_position[4][2];
+
+   //new left middle leg coordinates
+   p_base_new[1][0] = current_leg_position[1][0] * cos(-delta_roll) - current_leg_position[1][2] * sin(-delta_roll);
+   p_base_new[1][2] = current_leg_position[1][0] * sin(-delta_roll) + current_leg_position[1][2] * cos(-delta_roll);
+
+   //new right middle leg coordinates
+   p_base_new[4][0] = current_leg_position[4][0] * cos(-delta_roll) - current_leg_position[4][2] * sin(-delta_roll);
+   p_base_new[4][2] = current_leg_position[4][0] * sin(-delta_roll) + current_leg_position[4][2] * cos(-delta_roll);
+
+   p_delta[1][0] = p_base_new[1][0] - current_leg_position[1][0];
+   p_delta[1][2] = p_base_new[1][2] - current_leg_position[1][2];
+
+   p_delta[4][0] = p_base_new[4][0] - current_leg_position[4][0];
+   p_delta[4][2] = p_base_new[4][2] - current_leg_position[4][2];
+
+   Xt[1] = local_current_leg_position[1][0] + p_delta[1][0];
+   Yt[1] = local_current_leg_position[1][1];
+   Zt[1] = local_current_leg_position[1][2] + p_delta[1][2];
+
+   Xt[4] = local_current_leg_position[4][0] + p_delta[4][0];
+   Yt[4] = local_current_leg_position[4][1];
+   Zt[4] = local_current_leg_position[4][2] + p_delta[4][2];
+
+  moveLeg(1, Xt[1], Yt[1], Zt[1]);
+  moveLeg(4, Xt[4], Yt[4], Zt[4]);
+
+  current_roll = input_roll;
+}
+
 void hexapodMove()
 {
    if ((time_from_start + 1000) >= next_time)
@@ -195,6 +250,13 @@ int main()
 
       k = 4 * dH / (diameter * diameter);
 
+      input_roll = map(channel[0], 600, 1600, 0.524, -0.524);
+
+      if (fabs(input_roll) < 0.02)
+      {
+         input_roll = 0;
+      }
+
       //SWC switch mode
       if (channel[5] > 1300)                                //low
       {
@@ -202,7 +264,8 @@ int main()
       }
       else if (channel[5] < 1200 && channel[5] > 900)       //mid
       {
-         heightTest(H);
+         //heightTest(H);
+         rotateBody();
       }
       else if (channel[5] < 700)                            //high
       {

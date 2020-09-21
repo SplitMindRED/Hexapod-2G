@@ -210,6 +210,21 @@
           <WinNumber>1</WinNumber>
           <ItemText>Vy,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>current_leg_position</ItemText>
+        </Ww>
+        <Ww>
+          <count>13</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>current_roll,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>14</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>input_roll,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -275,13 +290,6 @@
       <pszMrulep></pszMrulep>
       <pSingCmdsp></pSingCmdsp>
       <pMultCmdsp></pMultCmdsp>
-      <LogicAnalyzers>
-        <Wi>
-          <IntNumber>0</IntNumber>
-          <FirstString>\\Hexapod_2G\include/SML.c\TimeFromStart</FirstString>
-          <SecondString>0080000000000000000000000000E0FFFFFFEF41000000000000000000000000000000005C5C48657861706F645F32475C696E636C7564652F534D4C2E635C54696D6546726F6D5374617274000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000002000000000000000000E03F1100000000000000000000000000000000000000100C0008</SecondString>
-        </Wi>
-      </LogicAnalyzers>
       <DebugDescription>
         <Enable>1</Enable>
         <EnableLog>0</EnableLog>

@@ -6,11 +6,11 @@
 *	a |= 1 << 7;					//set 1 in 7th bit
 *	a &= ~(1 << 3);				//set 0 in 3th bit
 *	a ^= 1 << 5;					//inversion of 5th bit
-*	a |= 1 << 7 | 1 << 8		//sets 1 to 7th and 8th bits
+*	a |= 1 << 7 | 1 << 8		   //sets 1 to 7th and 8th bits
 *	
 *	READING BITs
 *	if( a & (1<<7) )				//if 7th bit in "a" var equals 1 -> true
-*  a & ( 1 << 7 | 1 << 8 )	//checks 7th and 8th bits
+*  a & ( 1 << 7 | 1 << 8 )	   //checks 7th and 8th bits
 *
 ************************************************/
 
@@ -23,6 +23,8 @@ uint8_t channel_counter = 0;
 bool start_package = false;
 float channel[6];
 float Vx = 0, Vy = 0, Vz = 0;
+float input_roll = 0, input_pitch = 0, input_yaw = 0;
+float current_roll = 0, current_pitch = 0, current_yaw = 0;
 
 uint16_t delay_count = 0;
 
