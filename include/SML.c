@@ -40,8 +40,6 @@ double q0, q1, q2;
 //--------------------------------------------
 
 //movements and trajectory variables
-uint8_t trajectory_step[6] = { 0, 0, 0, 0, 0, 0};
-//local trajectory for each leg [step][leg][xyz coord]
 
 int16_t local_start_point[6][3] = 
 {
@@ -53,9 +51,6 @@ int16_t local_start_point[6][3] =
 	 {-X_OFFSET,      -Y_OFFSET,  -STARTHEIGHT},
 };
 
-float local_current_leg_position[6][3];
-float local_target_leg_position[6][3];
-bool flag_leg_ready[6] = {1, 1, 1, 1, 1, 1};
 bool phase[2] = { 0, 1 };
 
 float diameter = DIAMETER;                   //60 mm aplitude in step
@@ -63,8 +58,6 @@ float diameter = DIAMETER;                   //60 mm aplitude in step
 float k = 0;
 float dH = DELTAHEIGHT;
 float H = STARTHEIGHT;
-
-float Xt[6], Yt[6], Zt[6];
 
 unsigned long next_time = 1000;
 
@@ -155,10 +148,10 @@ uint64_t pulseIN(uint8_t PIN)
 float map(float have, float have_min, float have_max, float need_min, float need_max)
 {
 	float ratio = 0;
-   float add = 0;
-   
-   ratio = (need_max - need_min) / (have_max - have_min);
-   add = need_max - (have_max * ratio);
+	float add = 0;
+	
+	ratio = (need_max - need_min) / (have_max - have_min);
+	add = need_max - (have_max * ratio);
 	
 
 	return (have * ratio + add);
@@ -197,7 +190,8 @@ void I2C1_init(void)
 
 void I2C_writeByte(uint8_t device_address, uint8_t address, uint8_t data)
 {
-   uint32_t stop = 0;
+	uint32_t stop = 0;
+
 	//send START
 	I2C_GenerateSTART(I2C1, ENABLE);
 	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));
@@ -217,13 +211,13 @@ void I2C_writeByte(uint8_t device_address, uint8_t address, uint8_t data)
 	//send STOP
 	I2C_GenerateSTOP(I2C1, ENABLE);
 	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
-   {
-      stop++;
-      if(stop == 1000)
-      {
-         break;
-      }
-   }
+	{
+		stop++;
+		if(stop == 1000)
+		{
+			break;
+		}
+	}
 }
 
 void I2C_burstWrite(uint8_t device_address, uint8_t address, uint8_t n_data, uint8_t* data)
@@ -252,9 +246,6 @@ void I2C_burstWrite(uint8_t device_address, uint8_t address, uint8_t n_data, uin
 //PCA9685------------------------------------------------------------------------------------------------
 void PCA9685_reset(uint8_t device_address)
 {
-	//	uint8_t reset_data[2];
-	//	reset_data[0] = 0x00;
-	//	reset_data[1] = 0x06;
 	I2C_writeByte(device_address, 0x00, 0x06);
 }
 
@@ -275,6 +266,7 @@ void PCA9685_init(uint8_t device_address)
 	//0 PWM
 	for (uint8_t servo_num = 0; servo_num < 18; servo_num++)
 	{
+		//TODO test 0 pwm
 		//PCA9685_setPWM(PCA9685_ADDRESS_1, servo_num, 0, 1);
 	}
 	
@@ -288,34 +280,34 @@ void PCA9685_setPWM(uint8_t device_address, uint8_t servo_num, uint16_t on, uint
 
 void setServoAngle(uint8_t servo_num, double angle)
 {
-   if(angle < 0)
-   {
-      angle = 0;
-   }
+	if(angle < 0)
+	{
+		angle = 0;
+	}
 	double deg_to_pulse = 100 + (SERVOMAX - SERVOMIN) * angle / 180;
 	double deg_to_pulse_left = 100 + (SERVOMAX - SERVOMIN) * (180-angle) / 180;
 
 	if (servo_num < 9)
 	{
-        if(servo_num == 2 || servo_num == 5 || servo_num == 8)
-        {
-            PCA9685_setPWM(PCA9685_ADDRESS_1, servo_num, 0, deg_to_pulse_left);
-        }
-        else
-        {
-            PCA9685_setPWM(PCA9685_ADDRESS_1, servo_num, 0, deg_to_pulse);
-        }		
+		if(servo_num == 2 || servo_num == 5 || servo_num == 8)
+		{
+			PCA9685_setPWM(PCA9685_ADDRESS_1, servo_num, 0, deg_to_pulse_left);
+		}
+		else
+		{
+			PCA9685_setPWM(PCA9685_ADDRESS_1, servo_num, 0, deg_to_pulse);
+		}		
 	}
 	else
 	{
-        if(servo_num == 10 || servo_num == 13 || servo_num == 16)
-        {
-            PCA9685_setPWM(PCA9685_ADDRESS_2, servo_num -2, 0, deg_to_pulse_left);
-        }
-        else
-        {
-            PCA9685_setPWM(PCA9685_ADDRESS_2, servo_num -2, 0, deg_to_pulse);
-        }		
+		if(servo_num == 10 || servo_num == 13 || servo_num == 16)
+		{
+			PCA9685_setPWM(PCA9685_ADDRESS_2, servo_num -2, 0, deg_to_pulse_left);
+		}
+		else
+		{
+			PCA9685_setPWM(PCA9685_ADDRESS_2, servo_num -2, 0, deg_to_pulse);
+		}		
 	}	
 }
 
@@ -324,13 +316,9 @@ bool phaseControl(uint8_t group_num)
 	float X, Y, Z;
 	float x, y, r;
 
-	//X = local_current_leg_position[group_num + 2][0];
-	//Y = local_current_leg_position[group_num + 2][1];
-	//Z = local_current_leg_position[group_num + 2][2];
-
 	X = Leg[group_num + 2].current_x;
-	Z = Leg[group_num + 2].current_y;
-	Y = Leg[group_num + 2].current_z;
+	Y = Leg[group_num + 2].current_y;
+	Z = Leg[group_num + 2].current_z;
 
 	//parameters in circle formula (x+x0)^2 + (y+y0)^2 = r^2
 	x = X - X_OFFSET + (2 * group_num * X_OFFSET);	//short form. if gropu=0 -> -X_OFFSET, if group = 1 -> +X_OFFSET
@@ -339,7 +327,7 @@ bool phaseControl(uint8_t group_num)
 
 	if (x*x + y*y >= r*r)
 	{
-		phase[group_num] = !phase[group_num];
+		phase[group_num] = !phase[group_num];		
 	}
 
 	return phase[group_num];
@@ -413,8 +401,7 @@ void EXTI0_IRQHandler(void)
 				//for emergency stop check 4 channel with new value
 				if (channel[4] > 1100)
 				{
-					servo_enable = 0;
-					
+					servo_enable = 0;					
 				}
 				else
 				{
@@ -521,7 +508,7 @@ void findAngles(uint8_t leg_num, double x, double y, double z)
 
 	//q0 = q0rad * 180 / pi + 45;		//front right
 	//q0 = q0rad * 180 / pi + 96;		//mid right
-   //q0 = q0rad * 180 / pi + 135;	//back right
+	//q0 = q0rad * 180 / pi + 135;	//back right
 	//q0 = q0rad * 180 / pi - 45;		//front left
 	//q0 = q0rad * 180 / pi - 90;		//mid left
 	//q0 = q0rad * 180 / pi - 135;	//back left
@@ -540,10 +527,6 @@ void moveLeg(uint8_t leg_num, double x, double y, double z)
 	setServoAngle(leg_num * 3, q0);
 	setServoAngle(leg_num * 3 + 1, q1);
 	setServoAngle(leg_num * 3 + 2, q2);
-
-	//local_current_leg_position[leg_num][0] = x;
-	//local_current_leg_position[leg_num][1] = y;
-	//local_current_leg_position[leg_num][2] = z;
 
 	Leg[leg_num].current_x = x;
 	Leg[leg_num].current_y = y;

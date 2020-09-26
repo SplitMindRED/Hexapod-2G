@@ -183,47 +183,47 @@
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Xt,0x0A</ItemText>
+          <ItemText>LocalCurrentLegPosition</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Yt,0x0A</ItemText>
+          <ItemText>Vx,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Zt,0x0A</ItemText>
+          <ItemText>Vy,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>LocalCurrentLegPosition</ItemText>
+          <ItemText>current_leg_position</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Vx,0x0A</ItemText>
+          <ItemText>current_roll,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Vy,0x0A</ItemText>
+          <ItemText>input_roll,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>current_leg_position</ItemText>
+          <ItemText>Leg</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>current_roll,0x0A</ItemText>
+          <ItemText>phase</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>input_roll,0x0A</ItemText>
+          <ItemText>temp,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>

@@ -84,12 +84,8 @@ extern double q0, q1, q2;
 //--------------------------------------
 
 //movements and trajectory variables
-extern uint8_t trajectory_step[6];
-//local trajectory for each leg [step][xyz coord]
-extern float local_current_leg_position[6][3];
-extern float local_target_leg_position[6][3];
+
 extern int16_t local_start_point[6][3];
-extern bool flag_leg_ready[6];
 extern bool phase[2];
 
 extern float diameter;
@@ -98,11 +94,10 @@ extern float k;
 extern float dH;
 extern float H;
 
-//x(t) function
-extern float Xt[6], Yt[6], Zt[6];
-
 extern unsigned long next_time;
 
+//all cordinates of this structure are 
+//in local coordinate system of each leg
 extern struct Legs
 {
    //f(t) coordinates functions
@@ -117,6 +112,7 @@ extern struct Legs
    float target_x;
    float target_y;
    float target_z;
+
 
 
 } Leg[6];
