@@ -66,10 +66,13 @@ void rotateBody()
    //leg tips's coordinates in central CS (coordinate system)
    float p_base[6][3];
    float p_base_new[6][3];
+   float temp_z[6];
    float p_delta[6][3];
    float delta_roll = 0;
+   float delta_pitch = 0;
 
    delta_roll = input_roll - current_roll;
+   delta_pitch = input_pitch - current_pitch;
 
    //right back leg
    //X
@@ -119,78 +122,31 @@ void rotateBody()
    //Z
    p_base[5][2] = Leg[5].current_z;
 
-   //new right back leg coordinates
-   p_base_new[0][0] = p_base[0][0] * cos(-delta_roll) - p_base[0][2] * sin(-delta_roll);
-   p_base_new[0][2] = p_base[0][0] * sin(-delta_roll) + p_base[0][2] * cos(-delta_roll);
-
-   //new right middle leg coordinates
-   p_base_new[1][0] = p_base[1][0] * cos(-delta_roll) - p_base[1][2] * sin(-delta_roll);
-   p_base_new[1][2] = p_base[1][0] * sin(-delta_roll) + p_base[1][2] * cos(-delta_roll);
-
-   //new right front leg coordinates
-   p_base_new[2][0] = p_base[2][0] * cos(-delta_roll) - p_base[2][2] * sin(-delta_roll);
-   p_base_new[2][2] = p_base[2][0] * sin(-delta_roll) + p_base[2][2] * cos(-delta_roll);
-
-   //new left front leg coordinates
-   p_base_new[3][0] = p_base[3][0] * cos(-delta_roll) - p_base[3][2] * sin(-delta_roll);
-   p_base_new[3][2] = p_base[3][0] * sin(-delta_roll) + p_base[3][2] * cos(-delta_roll);
-
-   //new left middle leg coordinates
-   p_base_new[4][0] = p_base[4][0] * cos(-delta_roll) - p_base[4][2] * sin(-delta_roll);
-   p_base_new[4][2] = p_base[4][0] * sin(-delta_roll) + p_base[4][2] * cos(-delta_roll); 
-
-   //new left back leg coordinates
-   p_base_new[5][0] = p_base[5][0] * cos(-delta_roll) - p_base[5][2] * sin(-delta_roll);
-   p_base_new[5][2] = p_base[5][0] * sin(-delta_roll) + p_base[5][2] * cos(-delta_roll);
-
-   p_delta[0][0] = p_base_new[0][0] - p_base[0][0];
-   p_delta[0][2] = p_base_new[0][2] - p_base[0][2];
-
-   p_delta[1][0] = p_base_new[1][0] - p_base[1][0];
-   p_delta[1][2] = p_base_new[1][2] - p_base[1][2];
-
-   p_delta[2][0] = p_base_new[2][0] - p_base[2][0];
-   p_delta[2][2] = p_base_new[2][2] - p_base[2][2];
-
-   p_delta[3][0] = p_base_new[3][0] - p_base[3][0];
-   p_delta[3][2] = p_base_new[3][2] - p_base[3][2];
-
-   p_delta[4][0] = p_base_new[4][0] - p_base[4][0];
-   p_delta[4][2] = p_base_new[4][2] - p_base[4][2];   
-
-   p_delta[5][0] = p_base_new[5][0] - p_base[5][0];
-   p_delta[5][2] = p_base_new[5][2] - p_base[5][2];
-
-   Leg[0].Xt = Leg[0].current_x + p_delta[0][0];
-   Leg[0].Yt = Leg[0].current_y;
-   Leg[0].Zt = Leg[0].current_z + p_delta[0][2];
-
-   Leg[1].Xt = Leg[1].current_x + p_delta[1][0];
-   Leg[1].Yt = Leg[1].current_y;
-   Leg[1].Zt = Leg[1].current_z + p_delta[1][2];
-
-   Leg[2].Xt = Leg[2].current_x + p_delta[2][0];
-   Leg[2].Yt = Leg[2].current_y;
-   Leg[2].Zt = Leg[2].current_z + p_delta[2][2];
-
-   Leg[3].Xt = Leg[3].current_x + p_delta[3][0];
-   Leg[3].Yt = Leg[3].current_y;
-   Leg[3].Zt = Leg[3].current_z + p_delta[3][2];
-
-   Leg[4].Xt = Leg[4].current_x + p_delta[4][0];
-   Leg[4].Yt = Leg[4].current_y;
-   Leg[4].Zt = Leg[4].current_z + p_delta[4][2];
-
-   Leg[5].Xt = Leg[5].current_x + p_delta[5][0];
-   Leg[5].Yt = Leg[5].current_y;
-   Leg[5].Zt = Leg[5].current_z + p_delta[5][2];
-
    for (uint8_t i = 0; i < 6; i++)
    {
+      //rotation around Y axis
+      p_base_new[i][0] = p_base[i][0] * cos(-delta_roll) - p_base[i][2] * sin(-delta_roll);
+      //p_base_new[i][2] = p_base[i][0] * sin(-delta_roll) + p_base[i][2] * cos(-delta_roll);
+      temp_z[i] = p_base[i][0] * sin(-delta_roll) + p_base[i][2] * cos(-delta_roll);
+
+      //rotation around X axis
+      p_base_new[i][1] = p_base[i][1] * cos(-delta_pitch) - temp_z[i] * sin(-delta_pitch);
+      p_base_new[i][2] = p_base[i][1] * sin(-delta_pitch) + temp_z[i] * cos(-delta_pitch);
+
+      p_delta[i][0] = p_base_new[i][0] - p_base[i][0];
+      p_delta[i][1] = p_base_new[i][1] - p_base[i][1];
+      p_delta[i][2] = p_base_new[i][2] - p_base[i][2];
+      //p_delta[i][2] = temp_z[i]- p_base[i][2];
+
+      Leg[i].Xt = Leg[i].current_x + p_delta[i][0];
+      Leg[i].Yt = Leg[i].current_y + p_delta[i][1];
+      Leg[i].Zt = Leg[i].current_z + p_delta[i][2];
+
       moveLeg(i, Leg[i].Xt, Leg[i].Yt, Leg[i].Zt);
    }
 
   current_roll = input_roll;
+  current_pitch = input_pitch;
 }
 
 void hexapodMove()
@@ -319,7 +275,8 @@ int main()
 
       k = 4 * dH / (diameter * diameter);
 
-      input_roll = map(channel[0], 600, 1600, 0.524, -0.524);
+      input_roll = map(channel[0], 600, 1600, 0.35, -0.35);
+      input_pitch = map(channel[1], 600, 1600, 0.35, -0.35);
 
       if (fabs(input_roll) < 0.02)
       {

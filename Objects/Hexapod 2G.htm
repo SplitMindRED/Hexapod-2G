@@ -3,9 +3,9 @@
 <title>Static Call Graph - [.\Objects\Hexapod 2G.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Hexapod 2G.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat Sep 26 16:46:47 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat Sep 26 17:42:09 2020
 <BR><P>
-<H3>Maximum Stack Usage =        560 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        592 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 __rt_entry_main &rArr; main &rArr; rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 <P>
@@ -202,7 +202,7 @@ Global Symbols
 <P><STRONG><a name="[d8]"></a>__rt_entry_postsh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000009))
 
 <P><STRONG><a name="[45]"></a>__rt_entry_main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000D))
-<BR><BR>[Stack]<UL><LI>Max Depth = 560 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 592 + Unknown Stack Size
 <LI>Call Chain = __rt_entry_main &rArr; main &rArr; rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -836,8 +836,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[46]"></a>main</STRONG> (Thumb, 334 bytes, Stack size 8 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 560<LI>Call Chain = main &rArr; rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
+<P><STRONG><a name="[46]"></a>main</STRONG> (Thumb, 356 bytes, Stack size 8 bytes, main.o(i.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 592<LI>Call Chain = main &rArr; rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setup
@@ -900,8 +900,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setup
 </UL>
 
-<P><STRONG><a name="[91]"></a>rotateBody</STRONG> (Thumb, 2502 bytes, Stack size 280 bytes, main.o(i.rotateBody))
-<BR><BR>[Stack]<UL><LI>Max Depth = 552<LI>Call Chain = rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
+<P><STRONG><a name="[91]"></a>rotateBody</STRONG> (Thumb, 1500 bytes, Stack size 312 bytes, main.o(i.rotateBody))
+<BR><BR>[Stack]<UL><LI>Max Depth = 584<LI>Call Chain = rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;moveLeg
 <LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sin
