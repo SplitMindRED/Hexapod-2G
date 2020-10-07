@@ -114,7 +114,7 @@ extern struct Legs
    float target_y;
    float target_z;
 
-
+   double q0, q1, q2;
 
 } Leg[6];
 

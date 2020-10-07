@@ -475,7 +475,21 @@ void findAngles(uint8_t leg_num, double x, double y, double z)
 		//left side
 		else
 		{
-			q0rad = atan(y / x) + pi;
+			if (x < 0)
+			{
+				q0rad = atan(y / x) + pi;
+			}
+			else
+			{
+				if (leg_num == 5)
+				{
+					q0rad = -atan(y / x) + pi; //FIX THIS SHIT!
+				}		
+				else
+				{
+					q0rad = atan(y / x);
+				}
+			}
 		}
 	}
 
@@ -518,6 +532,10 @@ void findAngles(uint8_t leg_num, double x, double y, double z)
 
 	q2rad = acos( (AB*AB + BC*BC - AC*AC) / (2 * AB * BC) );
 	q2 = q2rad * 180 / pi;
+
+	Leg[leg_num].q0 = q0;
+	Leg[leg_num].q1 = q1;
+	Leg[leg_num].q2 = q2;
 }
 
 void moveLeg(uint8_t leg_num, double x, double y, double z)

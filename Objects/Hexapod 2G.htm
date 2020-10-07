@@ -3,9 +3,9 @@
 <title>Static Call Graph - [.\Objects\Hexapod 2G.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Hexapod 2G.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Tue Oct 06 22:14:16 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Thu Oct 08 01:08:12 2020
 <BR><P>
-<H3>Maximum Stack Usage =        592 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        576 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 __rt_entry_main &rArr; main &rArr; rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 <P>
@@ -202,7 +202,7 @@ Global Symbols
 <P><STRONG><a name="[d8]"></a>__rt_entry_postsh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000009))
 
 <P><STRONG><a name="[45]"></a>__rt_entry_main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000D))
-<BR><BR>[Stack]<UL><LI>Max Depth = 592 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 576 + Unknown Stack Size
 <LI>Call Chain = __rt_entry_main &rArr; main &rArr; rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -595,7 +595,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_writeByte
 </UL>
-<BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
+<BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
 </UL>
 
 <P><STRONG><a name="[58]"></a>RCC_APB1PeriphClockCmd</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, stm32f10x_rcc.o(i.RCC_APB1PeriphClockCmd))
@@ -791,14 +791,15 @@ Global Symbols
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setup
 </UL>
 
-<P><STRONG><a name="[7f]"></a>findAngles</STRONG> (Thumb, 820 bytes, Stack size 96 bytes, sml.o(i.findAngles))
-<BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
+<P><STRONG><a name="[7f]"></a>findAngles</STRONG> (Thumb, 960 bytes, Stack size 88 bytes, sml.o(i.findAngles))
+<BR><BR>[Stack]<UL><LI>Max Depth = 216<LI>Call Chain = findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sqrt
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;atan2
 <LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;atan
 <LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;acos
 <LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
 <LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmpeq
 <LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
@@ -808,19 +809,19 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;moveLeg
 </UL>
 
-<P><STRONG><a name="[81]"></a>fullServoTest</STRONG> (Thumb, 154 bytes, Stack size 32 bytes, main.o(i.fullServoTest))
+<P><STRONG><a name="[82]"></a>fullServoTest</STRONG> (Thumb, 154 bytes, Stack size 32 bytes, main.o(i.fullServoTest))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = fullServoTest &rArr; setServoAngle &rArr; PCA9685_setPWM &rArr; I2C_writeByte &rArr; I2C_CheckEvent
 </UL>
-<BR>[Calls]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
-<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
+<BR>[Calls]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
+<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 </UL>
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[84]"></a>hexapodMove</STRONG> (Thumb, 2470 bytes, Stack size 48 bytes, main.o(i.hexapodMove))
-<BR><BR>[Stack]<UL><LI>Max Depth = 320<LI>Call Chain = hexapodMove &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
+<P><STRONG><a name="[85]"></a>hexapodMove</STRONG> (Thumb, 2516 bytes, Stack size 48 bytes, main.o(i.hexapodMove))
+<BR><BR>[Stack]<UL><LI>Max Depth = 312<LI>Call Chain = hexapodMove &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;phaseControl
 <LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;moveLeg
@@ -829,28 +830,28 @@ Global Symbols
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fsub
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_frsub
 <LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
-<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
-<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
+<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
+<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
 <LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
 </UL>
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[46]"></a>main</STRONG> (Thumb, 356 bytes, Stack size 8 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 592<LI>Call Chain = main &rArr; rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
+<P><STRONG><a name="[46]"></a>main</STRONG> (Thumb, 378 bytes, Stack size 8 bytes, main.o(i.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 576<LI>Call Chain = main &rArr; rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setup
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rotateBody
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
-<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fullServoTest
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
+<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fullServoTest
 <LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cfrcmple
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cfcmple
 <LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
-<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
+<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
-<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
+<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
 <LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 </UL>
@@ -869,19 +870,19 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[86]"></a>moveLeg</STRONG> (Thumb, 140 bytes, Stack size 48 bytes, sml.o(i.moveLeg))
-<BR><BR>[Stack]<UL><LI>Max Depth = 272<LI>Call Chain = moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
+<P><STRONG><a name="[86]"></a>moveLeg</STRONG> (Thumb, 128 bytes, Stack size 48 bytes, sml.o(i.moveLeg))
+<BR><BR>[Stack]<UL><LI>Max Depth = 264<LI>Call Chain = moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;findAngles
-<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 </UL>
 <BR>[Called By]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setup
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rotateBody
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
 </UL>
 
-<P><STRONG><a name="[87]"></a>phaseControl</STRONG> (Thumb, 172 bytes, Stack size 48 bytes, sml.o(i.phaseControl))
+<P><STRONG><a name="[87]"></a>phaseControl</STRONG> (Thumb, 160 bytes, Stack size 48 bytes, sml.o(i.phaseControl))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = phaseControl &rArr; __aeabi_fmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cfrcmple
@@ -891,7 +892,7 @@ Global Symbols
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fsub
 <LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
 </UL>
-<BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
+<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
 </UL>
 
 <P><STRONG><a name="[95]"></a>pinMode</STRONG> (Thumb, 226 bytes, Stack size 16 bytes, sml.o(i.pinMode))
@@ -900,8 +901,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setup
 </UL>
 
-<P><STRONG><a name="[91]"></a>rotateBody</STRONG> (Thumb, 1558 bytes, Stack size 312 bytes, main.o(i.rotateBody))
-<BR><BR>[Stack]<UL><LI>Max Depth = 584<LI>Call Chain = rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
+<P><STRONG><a name="[91]"></a>rotateBody</STRONG> (Thumb, 1844 bytes, Stack size 304 bytes, main.o(i.rotateBody))
+<BR><BR>[Stack]<UL><LI>Max Depth = 568<LI>Call Chain = rotateBody &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;moveLeg
 <LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sin
@@ -909,7 +910,7 @@ Global Symbols
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fsub
 <LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
-<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
+<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
 <LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
@@ -919,23 +920,23 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[83]"></a>setServoAngle</STRONG> (Thumb, 280 bytes, Stack size 64 bytes, sml.o(i.setServoAngle))
+<P><STRONG><a name="[84]"></a>setServoAngle</STRONG> (Thumb, 280 bytes, Stack size 64 bytes, sml.o(i.setServoAngle))
 <BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = setServoAngle &rArr; PCA9685_setPWM &rArr; I2C_writeByte &rArr; I2C_CheckEvent
 </UL>
 <BR>[Calls]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PCA9685_setPWM
 <LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
-<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
+<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
 <LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2uiz
 <LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 </UL>
 <BR>[Called By]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;moveLeg
-<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fullServoTest
+<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fullServoTest
 </UL>
 
 <P><STRONG><a name="[8d]"></a>setup</STRONG> (Thumb, 292 bytes, Stack size 48 bytes, main.o(i.setup))
-<BR><BR>[Stack]<UL><LI>Max Depth = 320<LI>Call Chain = setup &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
+<BR><BR>[Stack]<UL><LI>Max Depth = 312<LI>Call Chain = setup &rArr; moveLeg &rArr; findAngles &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pinMode
 <LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;moveLeg
@@ -989,7 +990,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = __aeabi_dadd
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;findAngles
-<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rotateBody
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_sin
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
@@ -1020,7 +1021,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_ddiv
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;findAngles
-<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_invalid
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;atan2
@@ -1058,7 +1059,7 @@ Global Symbols
 <P><STRONG><a name="[94]"></a>__aeabi_d2uiz</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, dfixu.o(x$fpl$dfixu))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_d2uiz
 </UL>
-<BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
+<BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
 </UL>
 
 <P><STRONG><a name="[a4]"></a>_dfixu</STRONG> (Thumb, 90 bytes, Stack size 32 bytes, dfixu.o(x$fpl$dfixu), UNUSED)
@@ -1068,7 +1069,7 @@ Global Symbols
 <P><STRONG><a name="[6d]"></a>__aeabi_i2d</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, dflt_clz.o(x$fpl$dflt))
 <BR><BR>[Called By]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setup
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rotateBody
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
 </UL>
 
@@ -1080,12 +1081,13 @@ Global Symbols
 
 <P><STRONG><a name="[e6]"></a>_dfltu</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, dflt_clz.o(x$fpl$dfltu), UNUSED)
 
-<P><STRONG><a name="[85]"></a>__aeabi_cdcmple</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, dleqf.o(x$fpl$dleqf))
+<P><STRONG><a name="[81]"></a>__aeabi_cdcmple</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, dleqf.o(x$fpl$dleqf))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_cdcmple
 </UL>
-<BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
+<BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;findAngles
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
 </UL>
 
 <P><STRONG><a name="[a5]"></a>_dcmple</STRONG> (Thumb, 120 bytes, Stack size 32 bytes, dleqf.o(x$fpl$dleqf), UNUSED)
@@ -1099,10 +1101,10 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_dmul
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;findAngles
-<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rotateBody
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fullServoTest
+<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fullServoTest
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_sin
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
 <LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_poly
@@ -1167,9 +1169,9 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_dsub
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;findAngles
-<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setServoAngle
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rotateBody
-<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fullServoTest
+<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fullServoTest
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_sin
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
 <LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_cos
@@ -1183,13 +1185,13 @@ Global Symbols
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dadd1
 </UL>
 
-<P><STRONG><a name="[82]"></a>__aeabi_f2d</STRONG> (Thumb, 0 bytes, Stack size 16 bytes, f2d.o(x$fpl$f2d))
+<P><STRONG><a name="[83]"></a>__aeabi_f2d</STRONG> (Thumb, 0 bytes, Stack size 16 bytes, f2d.o(x$fpl$f2d))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = __aeabi_f2d
 </UL>
 <BR>[Called By]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rotateBody
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
-<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fullServoTest
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
+<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fullServoTest
 </UL>
 
 <P><STRONG><a name="[aa]"></a>_f2d</STRONG> (Thumb, 86 bytes, Stack size 16 bytes, f2d.o(x$fpl$f2d), UNUSED)
@@ -1203,7 +1205,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;phaseControl
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rotateBody
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
 </UL>
 
 <P><STRONG><a name="[ac]"></a>_fadd</STRONG> (Thumb, 196 bytes, Stack size 16 bytes, faddsub_clz.o(x$fpl$fadd), UNUSED)
@@ -1222,7 +1224,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;phaseControl
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
 </UL>
 
 <P><STRONG><a name="[ae]"></a>_fdiv</STRONG> (Thumb, 384 bytes, Stack size 16 bytes, fdiv.o(x$fpl$fdiv), UNUSED)
@@ -1264,7 +1266,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;phaseControl
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
 </UL>
 
 <P><STRONG><a name="[b1]"></a>_fmul</STRONG> (Thumb, 258 bytes, Stack size 16 bytes, fmul.o(x$fpl$fmul), UNUSED)
@@ -1300,7 +1302,7 @@ Global Symbols
 
 <P><STRONG><a name="[89]"></a>__aeabi_frsub</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, faddsub_clz.o(x$fpl$frsb))
 <BR><BR>[Called By]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
 </UL>
 
 <P><STRONG><a name="[b4]"></a>_frsb</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, faddsub_clz.o(x$fpl$frsb), UNUSED)
@@ -1314,7 +1316,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;phaseControl
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rotateBody
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexapodMove
 </UL>
 
 <P><STRONG><a name="[b6]"></a>_fsub</STRONG> (Thumb, 234 bytes, Stack size 16 bytes, faddsub_clz.o(x$fpl$fsub), UNUSED)

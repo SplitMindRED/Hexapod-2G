@@ -168,12 +168,12 @@
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>input_roll</ItemText>
+          <ItemText>channel</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>current_roll</ItemText>
+          <ItemText>input_roll</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
@@ -183,39 +183,19 @@
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>current_pitch</ItemText>
+          <ItemText>input_yaw</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
           <ItemText>Leg</ItemText>
         </Ww>
-        <Ww>
-          <count>8</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>channel</ItemText>
-        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
           <count>0</count>
           <WinNumber>2</WinNumber>
-          <ItemText>Vx,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>1</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>Vy,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>HalfStepAmplitudeX,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>HalfStepAmplitudeY,0x0A</ItemText>
+          <ItemText>leg_num</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>
