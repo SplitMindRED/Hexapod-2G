@@ -73,7 +73,8 @@ extern bool start_package;
 extern float channel[6];
 extern float Vx, Vy, Vz;
 extern float input_roll, input_pitch, input_yaw;
-extern float current_roll, current_pitch, current_yaw;
+//extern float current_roll, current_pitch, current_yaw;
+
 
 extern uint16_t delay_count;
 

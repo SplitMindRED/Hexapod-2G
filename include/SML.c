@@ -24,7 +24,7 @@ bool start_package = false;
 float channel[6];
 float Vx = 0, Vy = 0, Vz = 0;
 float input_roll = 0, input_pitch = 0, input_yaw = 0;
-float current_roll = 0, current_pitch = 0, current_yaw = 0;
+//float current_roll = 0, current_pitch = 0, current_yaw = 0;
 
 uint16_t delay_count = 0;
 

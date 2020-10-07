@@ -29,22 +29,27 @@ Project File Date:  09/20/2020
 Rebuild target 'Main'
 compiling retarget_io.c...
 compiling main.c...
-compiling misc.c...
+src\main.c(71): warning:  #177-D: variable "delta_roll"  was declared but never referenced
+     float delta_roll = 0;
+src\main.c(72): warning:  #177-D: variable "delta_pitch"  was declared but never referenced
+     float delta_pitch = 0;
+src\main.c: 2 warnings, 0 errors
 compiling SML.c...
 include\SML.c(316): warning:  #550-D: variable "Z"  was set but never used
   	float X, Y, Z;
 include\SML.c: 1 warning, 0 errors
-compiling stm32f10x_i2c.c...
+compiling misc.c...
 compiling stm32f10x_gpio.c...
 compiling stm32f10x_rcc.c...
+compiling stm32f10x_i2c.c...
 compiling stm32f10x_spi.c...
 compiling GPIO_STM32F10x.c...
 assembling startup_stm32f10x_md.s...
 compiling stm32f10x_tim.c...
 compiling system_stm32f10x.c...
 linking...
-Program Size: Code=18004 RO-data=796 RW-data=232 ZI-data=1872  
-".\Objects\Hexapod 2G.axf" - 0 Error(s), 1 Warning(s).
+Program Size: Code=18052 RO-data=796 RW-data=216 ZI-data=1872  
+".\Objects\Hexapod 2G.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -99,15 +104,15 @@ Package Vendor: Keil
       Include file:  RTE_Driver\Config\RTE_Device.h
 
    * Component: Keil::Device:StdPeriph Drivers:Framework:3.5.1
-      Source file:   Device\StdPeriph_Driver\templates\stm32f10x_conf.h
+      Include file:  Device\StdPeriph_Driver\templates\stm32f10x_it.h
       Source file:   Device\StdPeriph_Driver\src\misc.c
+      Source file:   Device\StdPeriph_Driver\templates\stm32f10x_conf.h
       Source file:   Device\StdPeriph_Driver\templates\stm32f10x_it.c
       Include file:  Device\StdPeriph_Driver\inc\misc.h
-      Include file:  Device\StdPeriph_Driver\templates\stm32f10x_it.h
 
    * Component: Keil::Device:StdPeriph Drivers:GPIO:3.5.0
-      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_gpio.c
+      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
 
    * Component: Keil::Device:StdPeriph Drivers:I2C:3.5.0
       Include file:  Device\StdPeriph_Driver\inc\stm32f10x_i2c.h
@@ -124,7 +129,7 @@ Package Vendor: Keil
    * Component: Keil::Device:StdPeriph Drivers:TIM:3.5.0
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_tim.c
       Include file:  Device\StdPeriph_Driver\inc\stm32f10x_tim.h
-Build Time Elapsed:  00:00:06
+Build Time Elapsed:  00:00:07
 </pre>
 </body>
 </html>
