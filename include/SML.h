@@ -39,9 +39,13 @@
 #define OUTPUT_AF_OPEN_DRAIN			(3)
 
 // servo degrees parametre
-#define SERVOMIN  						100 // this is the 'minimum' pulse length count (out of 4096)	//115
-#define SERVOMID  						330 // this is the 'middle' pulse length count (out of 4096)
-#define SERVOMAX  						565 // this is the 'maximum' pulse length count (out of 4096)	//550
+//#define SERVOMIN  						100 // this is the 'minimum' pulse length count (out of 4096)	//115
+//#define SERVOMID  						330 // this is the 'middle' pulse length count (out of 4096)
+//#define SERVOMAX  						565 // this is the 'maximum' pulse length count (out of 4096)	//550
+
+#define SERVOMIN  						165 // this is the 'minimum' pulse length count (out of 4096)	//115
+#define SERVOMAX  						585 // this is the 'maximum' pulse length count (out of 4096)	//550
+
 //#define DEGREE_IN_PULSE				(SERVOMAX-SERVOMIN)/180
 
 #define LED0_ON_L		               0x06 //LED0 on tick, low byte
@@ -51,6 +55,7 @@
 
 #define PCA9685_ADDRESS_1           0x80
 #define PCA9685_ADDRESS_2           0x82
+#define MPU6250_ADDRESS             0x68
 
 //Hexapod parametres
 //offset from (0, 0) on XY plane in every local coordinate system of leg
@@ -75,7 +80,6 @@ extern float Vx, Vy, Vz;
 extern float input_roll, input_pitch, input_yaw;
 //extern float current_roll, current_pitch, current_yaw;
 
-
 extern uint16_t delay_count;
 
 extern bool servo_enable;
@@ -94,6 +98,9 @@ extern float diameter;
 extern float k;
 extern float dH;
 extern float H;
+
+extern int mpu;
+extern uint8_t mpu_arr[14];
 
 extern unsigned long next_time;
 
@@ -130,6 +137,8 @@ float map(float have, float have_min, float have_max, float need_min, float need
 void I2C1_init(void);
 void I2C_writeByte(uint8_t device_address, uint8_t address, uint8_t data);
 void I2C_burstWrite(uint8_t device_address, uint8_t address, uint8_t n_data, uint8_t* data);
+uint8_t I2C_readByte(uint8_t device_address, uint8_t address);
+void I2C_burstRead(uint8_t device_address, uint8_t address, uint8_t n_data, uint8_t* data);
 //END OF I2C-----------------------------------------------------------------------------------
 
 //PCA9685--------------------------------------------------------------------------------------
@@ -139,6 +148,11 @@ void PCA9685_setPWM(uint8_t device_address, uint8_t servo_num, uint16_t on, uint
 void setServoAngle(uint8_t servo_num, double angle);
 bool phaseControl(uint8_t GroupNum);
 //END OF PCA9685-------------------------------------------------------------------------------
+
+//MPU6250--------------------------------------------------------------------------------------
+void MPU6250_init(void);
+void MPU6250_getValues(void);
+//END OF MPU6250-------------------------------------------------------------------------------
 
 //TIMERS---------------------------------------------------------------------------------------
 //void TIMER3_Init_Millisec();

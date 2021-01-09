@@ -30,6 +30,9 @@ uint16_t delay_count = 0;
 
 bool servo_enable = false;
 
+int mpu = 0;
+uint8_t mpu_arr[14];
+
 //geometry variables--------------------------
 const uint8_t OA = 37;
 const uint8_t AB = 44;
@@ -194,26 +197,58 @@ void I2C_writeByte(uint8_t device_address, uint8_t address, uint8_t data)
 
 	//send START
 	I2C_GenerateSTART(I2C1, ENABLE);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
+	{
+		stop++;
+		if (stop >= 1000)
+		{
+			stop = 0;
+			break;
+		}
+	}
 
 	//send slave address
 	I2C_Send7bitAddress(I2C1, device_address, I2C_Direction_Transmitter);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
+	{
+		stop++;
+		if (stop >= 1000)
+		{
+			stop = 0;
+			break;
+		}
+	}
 
 	//send register address
 	I2C_SendData(I2C1, address);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
+	{
+		stop++;
+		if (stop >= 1000)
+		{
+			stop = 0;
+			break;
+		}
+	}
 
 	//send data
 	I2C_SendData(I2C1, data);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
+	{
+		stop++;
+		if (stop >= 1000)
+		{
+			stop = 0;
+			break;
+		}
+	}
 
 	//send STOP
 	I2C_GenerateSTOP(I2C1, ENABLE);
 	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
 	{
 		stop++;
-		if(stop == 1000)
+		if(stop >= 1000)
 		{
 			break;
 		}
@@ -241,6 +276,205 @@ void I2C_burstWrite(uint8_t device_address, uint8_t address, uint8_t n_data, uin
 	I2C_GenerateSTOP(I2C1, ENABLE);
 	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY));
 }
+
+uint8_t I2C_readByte(uint8_t device_address, uint8_t address)
+{
+	uint8_t data;
+   uint32_t stop = 0;
+   
+	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY))
+   {
+      stop++;
+      if(stop >= 1000)
+      {
+         stop = 0;
+         break;
+      }
+   }
+
+	I2C_GenerateSTART(I2C1, ENABLE);
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
+   {
+      stop++;
+      if(stop >= 1000)
+      {
+         stop = 0;
+         break;
+      }
+   }
+
+	I2C_Send7bitAddress(I2C1, device_address, I2C_Direction_Transmitter);
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
+   {
+      stop++;
+      if(stop >= 1000)
+      {
+         stop = 0;
+         break;
+      }
+   }
+
+	I2C_SendData(I2C1, address);
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
+   {
+      stop++;
+      if(stop >= 1000)
+      {
+         stop = 0;
+         break;
+      }
+   }
+
+	I2C_GenerateSTART(I2C1, ENABLE);
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
+   {
+      stop++;
+      if(stop >= 1000)
+      {
+         stop = 0;
+         break;
+      }
+   }
+
+	I2C_Send7bitAddress(I2C1, device_address, I2C_Direction_Receiver);
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED))
+   {
+      stop++;
+      if(stop >= 1000)
+      {
+         stop = 0;
+         break;
+      }
+   }
+	data = I2C_ReceiveData(I2C1);
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED))
+   {
+      stop++;
+      if(stop >= 1000)
+      {
+         stop = 0;
+         break;
+      }
+   }
+
+	I2C_AcknowledgeConfig(I2C1, DISABLE);
+	I2C_GenerateSTOP(I2C1, ENABLE);
+	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY))
+   {
+      stop++;
+      if(stop >= 1000)
+      {
+         stop = 0;
+         break;
+      }
+   }
+
+	return data;
+}
+
+void I2C_burstRead( uint8_t device_address, uint8_t address, uint8_t n_data, uint8_t* data)
+{
+	uint32_t stop = 0;
+
+	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY))
+   {
+      stop++;
+      if(stop >= 1000)
+      {
+         stop = 0;
+         break;
+      }
+   }
+
+	I2C_GenerateSTART(I2C1, ENABLE);
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
+	{
+		stop++;
+		if (stop >= 1000)
+		{
+			stop = 0;
+			break;
+		}
+	}
+
+	I2C_Send7bitAddress(I2C1, device_address, I2C_Direction_Transmitter);
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
+	{
+		stop++;
+		if (stop >= 1000)
+		{
+			stop = 0;
+			break;
+		}
+	}
+
+	I2C_SendData(I2C1, address);
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED))
+	{
+		stop++;
+		if (stop >= 1000)
+		{
+			stop = 0;
+			break;
+		}
+	}
+
+	I2C_GenerateSTOP(I2C1, ENABLE);
+
+	I2C_GenerateSTART(I2C1, ENABLE);
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
+	{
+		stop++;
+		if (stop >= 1000)
+		{
+			stop = 0;
+			break;
+		}
+	}
+
+	I2C_Send7bitAddress(I2C1, device_address, I2C_Direction_Receiver);
+	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED))
+	{
+		stop++;
+		if (stop >= 1000)
+		{
+			stop = 0;
+			break;
+		}
+	}
+
+	I2C_AcknowledgeConfig(I2C1, ENABLE);
+	while (n_data--) 
+	{
+		if (!n_data)
+		{
+			I2C_AcknowledgeConfig(I2C1, DISABLE);
+		}
+		while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED))
+		{
+			stop++;
+			if (stop >= 1000)
+			{
+				stop = 0;
+				break;
+			}
+		}
+
+		*data++ = I2C_ReceiveData(I2C1);
+	}
+
+	I2C_AcknowledgeConfig(I2C1, DISABLE);
+	I2C_GenerateSTOP(I2C1, ENABLE);
+	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY))
+	{
+		stop++;
+		if (stop >= 1000)
+		{
+			stop = 0;
+			break;
+		}
+	}
+}
 //END OF I2C---------------------------------------------------------------------------------------------
 
 //PCA9685------------------------------------------------------------------------------------------------
@@ -258,7 +492,9 @@ void PCA9685_init(uint8_t device_address)
 
 	//prescale
 	//I2C_writeByte(0xFE, 0x3); MAX
+	mpu_arr[0] = I2C_readByte(device_address, 0xFE);
 	I2C_writeByte(device_address, 0xFE, 0x64); //60hz 
+	mpu_arr[1] = I2C_readByte(device_address, 0xFE);
 
 	//normal mode
 	I2C_writeByte(device_address, 0x00, 0xA1);
@@ -268,8 +504,7 @@ void PCA9685_init(uint8_t device_address)
 	{
 		//TODO test 0 pwm
 		//PCA9685_setPWM(PCA9685_ADDRESS_1, servo_num, 0, 1);
-	}
-	
+	}	
 }
 
 void PCA9685_setPWM(uint8_t device_address, uint8_t servo_num, uint16_t on, uint16_t off)
@@ -284,8 +519,9 @@ void setServoAngle(uint8_t servo_num, double angle)
 	{
 		angle = 0;
 	}
-	double deg_to_pulse = 100 + (SERVOMAX - SERVOMIN) * angle / 180;
-	double deg_to_pulse_left = 100 + (SERVOMAX - SERVOMIN) * (180-angle) / 180;
+
+	double deg_to_pulse = SERVOMIN + (SERVOMAX - SERVOMIN) * angle / 180;
+	double deg_to_pulse_left = SERVOMIN + (SERVOMAX - SERVOMIN) * (180-angle) / 180;
 
 	if (servo_num < 9)
 	{
@@ -313,15 +549,16 @@ void setServoAngle(uint8_t servo_num, double angle)
 
 bool phaseControl(uint8_t group_num)
 {
-	float X, Y, Z;
+	float X, Y;
+//   float Z;
 	float x, y, r;
 
 	X = Leg[group_num + 2].current_x;
 	Y = Leg[group_num + 2].current_y;
-	Z = Leg[group_num + 2].current_z;
+//	Z = Leg[group_num + 2].current_z;
 
 	//parameters in circle formula (x+x0)^2 + (y+y0)^2 = r^2
-	x = X - X_OFFSET + (2 * group_num * X_OFFSET);	//short form. if gropu=0 -> -X_OFFSET, if group = 1 -> +X_OFFSET
+	x = X - X_OFFSET + (2 * group_num * X_OFFSET);	//short form. if group = 0 -> -X_OFFSET, if group = 1 -> +X_OFFSET
 	y = Y - Y_OFFSET;
 	r = diameter / 2;
 
@@ -333,6 +570,20 @@ bool phaseControl(uint8_t group_num)
 	return phase[group_num];
 }
 //END OF PCA9685-----------------------------------------------------------------------------------------
+
+//MPU6250------------------------------------------------------------------------------------------------
+void MPU6250_init(void)
+{
+	I2C_writeByte(MPU6250_ADDRESS, 0x6B, 0); //PWR_MGMT_1 register. wakes up MPU
+	delay(100);
+	mpu = I2C_readByte(MPU6250_ADDRESS, 0x75);
+}
+
+void MPU6250_getValues(void)
+{
+	I2C_burstRead(MPU6250_ADDRESS, 0x3B, 4, mpu_arr);
+}
+//END OF MPU6250-----------------------------------------------------------------------------------------
 
 //TIMERS-------------------------------------------------------------------------------------------------
 /*

@@ -25,6 +25,7 @@ void setup()
     I2C1_init();
     PCA9685_init(PCA9685_ADDRESS_1);
     PCA9685_init(PCA9685_ADDRESS_2);
+    MPU6250_init();
     delay(100);
     
     EXTI0_init();
@@ -37,7 +38,7 @@ void setup()
    {
       //set all legs start position
       moveLeg(i, local_start_point[i][0], local_start_point[i][1], local_start_point[i][2]);
-   }
+   }   
       
    //led on
    digitalWrite(PORT_C, 13, 0);
@@ -251,6 +252,10 @@ int main()
    //main loop
    while (1)
    {
+      //mpu = I2C_readByte(MPU6250_ADDRESS, 0x75);
+      //I2C_burst_read(MPU6250_ADDRESS, 0x3B, 2, &mpu_arr);
+      //MPU6250_getValues();
+      
       Vx = map(channel[0], 600, 1600, -1100, 1100);
 
       if (fabs(Vx) < 20)
@@ -282,7 +287,8 @@ int main()
       //SWC switch mode
       if (channel[5] > 1300)                                //low
       {
-         fullServoTest();         
+         fullServoTest();
+
       }
       else if (channel[5] < 1200 && channel[5] > 900)       //mid
       {
