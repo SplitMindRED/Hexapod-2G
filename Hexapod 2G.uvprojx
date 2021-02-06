@@ -337,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\include</IncludePath>
+              <IncludePath>.\include;..\My Library</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -392,14 +392,34 @@
           <GroupName>include</GroupName>
           <Files>
             <File>
-              <FileName>SML.c</FileName>
+              <FileName>hexapod_2Gen.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\include\SML.c</FilePath>
+              <FilePath>.\include\hexapod_2Gen.c</FilePath>
             </File>
             <File>
-              <FileName>SML.h</FileName>
+              <FileName>hexapod_2Gen.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\include\SML.h</FilePath>
+              <FilePath>.\include\hexapod_2Gen.h</FilePath>
+            </File>
+            <File>
+              <FileName>PCA9685.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\PCA9685.c</FilePath>
+            </File>
+            <File>
+              <FileName>PCA9685.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\include\PCA9685.h</FilePath>
+            </File>
+            <File>
+              <FileName>splitmind_stm32f103_lib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\splitmind_stm32f103_lib.c</FilePath>
+            </File>
+            <File>
+              <FileName>splitmind_stm32f103_lib.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\include\splitmind_stm32f103_lib.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -419,14 +439,14 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.3.0" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.6.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.4.0" condition="ARMv6_7_8-M Device">
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.7.0"/>
         <targetInfos>
           <targetInfo name="Main"/>
         </targetInfos>
       </component>
       <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="I/O" Csub="STDOUT" Cvariant="ITM" Cvendor="Keil" Cversion="1.2.0" condition="ARMCC Cortex-M with ITM">
-        <package name="ARM_Compiler" schemaVersion="1.4.9" url="http://www.keil.com/pack/" vendor="Keil" version="1.6.1"/>
+        <package name="ARM_Compiler" schemaVersion="1.6.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.6.3"/>
         <targetInfos>
           <targetInfo name="Main"/>
         </targetInfos>
@@ -438,6 +458,12 @@
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="STM32F1xx CMSIS">
+        <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.3.0"/>
+        <targetInfos>
+          <targetInfo name="Main"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="EXTI" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH">
         <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.3.0"/>
         <targetInfos>
           <targetInfo name="Main"/>
@@ -474,6 +500,12 @@
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="TIM" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
+        <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.3.0"/>
+        <targetInfos>
+          <targetInfo name="Main"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="USART" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
         <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.3.0"/>
         <targetInfos>
           <targetInfo name="Main"/>
