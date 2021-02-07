@@ -76,41 +76,15 @@ int main()
    //main loop
    while (1)
    {      
-      Vx = map(channel[0], 600, 1600, -1100, 1100);
-
-      if (fabs(Vx) < 20)
-      {
-         Vx = 0;         
-      }
-
-      Vy = map(channel[1], 600, 1600, -1100, 1100);   
-
-      if (fabs(Vy) < 20)
-      {
-         Vy = 0;
-      }
+      convert_input_data();
       
-      H = map(channel[2], 600, 1600, 70, 110);
-      dH = 30 * H * 1.1 / 70;
-
-      k = 4 * dH / (diameter * diameter);
-
-      input_roll = map(channel[0], 600, 1600, 0.35, -0.35);
-      input_pitch = map(channel[1], 600, 1600, 0.35, -0.35);
-      input_yaw = map(channel[3], 600, 1600, 0.35, -0.35);
-
-      if (fabs(input_roll) < 0.02)
-      {
-         input_roll = 0;
-      }
-      
-      if(servo_enable == 0)
-      {
-         UART1_print_str("Vx: ");
-         UART1_print(Vx);
-         UART1_print_str(" Vy: ");
-         UART1_println(Vy);
-      }
+//      if(servo_enable == 0)
+//      {
+//         UART1_print_str("Vx: ");
+//         UART1_print(Vx);
+//         UART1_print_str(" Vy: ");
+//         UART1_println(Vy);
+//      }
       
 
       //SWC switch mode
