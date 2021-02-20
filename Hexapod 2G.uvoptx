@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>228</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134228428</Address>
+          <Address>134228812</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -283,6 +283,21 @@
           <count>14</count>
           <WinNumber>2</WinNumber>
           <ItemText>leg_num,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>x</ItemText>
+        </Ww>
+        <Ww>
+          <count>16</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>y</ItemText>
+        </Ww>
+        <Ww>
+          <count>17</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>rounding,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>
