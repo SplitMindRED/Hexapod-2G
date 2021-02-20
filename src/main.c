@@ -46,17 +46,6 @@ void setup()
       //set all legs start position
       moveLeg(i, local_start_point[i][0], local_start_point[i][1], local_start_point[i][2]);
    }   
-      
-   double x = 1.0;
-   double y = 0.0;
-
-   rotatePoint(&x, &y, 3.14);
-
-   UART1_print_str("x: ");
-   UART1_print_div(x);
-   UART1_print_str(" y: ");
-   UART1_println_div(y);
-   
 
    //led on
    digitalWrite(PORT_C, 13, 0);
@@ -111,8 +100,8 @@ int main()
       }
       else if (channel[5] < 700)                            //high
       {
-         //hexapodMove();
-         new_version();
+         hexapodMove();
+         //new_version();
          //square_test();
       }   
    }
