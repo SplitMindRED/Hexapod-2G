@@ -100,7 +100,9 @@ int main()
       }
       else if (channel[5] < 700)                            //high
       {
-         hexapodMove();
+         //hexapodMove();
+         new_version();
+         //square_test();
       }   
    }
 }
