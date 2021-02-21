@@ -93,12 +93,12 @@ int main()
       {
          //heightTest(H);
          //rotateBody();
-         hexapodMove();
+         new_version();
       }
       else if (channel[5] < 700)                            //high
       {
-         //hexapodMove();
-         new_version();
+         hexapodMove();
+         //new_version();
          //square_test();
       }   
    }
