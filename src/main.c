@@ -41,12 +41,8 @@ void setup()
    
    delay(1000);   
        
-   for (uint8_t i = 0; i < 6; i++)
-   {
-      //set all legs start position
-      moveLeg(i, local_start_point[i][0], local_start_point[i][1], local_start_point[i][2]);
-   }   
-
+   hexapod_init();
+   
    //led on
    digitalWrite(PORT_C, 13, 0);
 }
@@ -96,12 +92,13 @@ int main()
       else if (channel[5] < 1200 && channel[5] > 900)       //mid
       {
          //heightTest(H);
-         rotateBody();
+         //rotateBody();
+         hexapodMove();
       }
       else if (channel[5] < 700)                            //high
       {
-         hexapodMove();
-         //new_version();
+         //hexapodMove();
+         new_version();
          //square_test();
       }   
    }
