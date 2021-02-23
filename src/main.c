@@ -86,7 +86,8 @@ int main()
       //SWC switch mode
       if (channel[5] > 1300)                                //low
       {
-         fullServoTest();
+         //fullServoTest();
+         rotateBody();
 
       }
       else if (channel[5] < 1200 && channel[5] > 900)       //mid
